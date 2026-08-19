@@ -40,14 +40,14 @@ export const MythologicalRoomCarousel: React.FC<MythologicalRoomCarouselProps> =
     const currentX = e.touches[0].clientX;
     const diff = currentX - startXRef.current;
     // Dampen drag distance for natural spring tension
-    setDragOffset(diff * 0.65);
+    setDragOffset(diff * 0.7);
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (startXRef.current === null) return;
     const diffX = startXRef.current - e.changedTouches[0].clientX;
 
-    if (Math.abs(diffX) > 45) {
+    if (Math.abs(diffX) > 40) {
       if (diffX > 0) {
         // Swiped right (in RTL: Next Game)
         handleNextRoom();
@@ -80,28 +80,26 @@ export const MythologicalRoomCarousel: React.FC<MythologicalRoomCarouselProps> =
         </h2>
       </div>
 
-      {/* 3D Depth Card Stage Container */}
-      <div className="relative w-full h-[510px] sm:h-[560px] flex items-center justify-center overflow-x-hidden my-1 z-20">
+      {/* 3D Cylinder / Cover Flow Stage */}
+      <div className="relative w-full h-[500px] sm:h-[530px] flex items-center justify-center overflow-x-hidden my-1 z-20">
         {GAMES_LIST.map((game, idx) => {
-          let position: 'center' | 'left' | 'right' | 'hidden' = 'hidden';
+          let offset = 99;
 
           if (idx === currentIndex) {
-            position = 'center';
-          } else if (idx === (currentIndex - 1 + GAMES_LIST.length) % GAMES_LIST.length) {
-            // Previous card (Right side in RTL)
-            position = 'right';
+            offset = 0;
           } else if (idx === (currentIndex + 1) % GAMES_LIST.length) {
-            // Next card (Left side in RTL)
-            position = 'left';
+            // Next card (Left in Persian RTL)
+            offset = 1;
+          } else if (idx === (currentIndex - 1 + GAMES_LIST.length) % GAMES_LIST.length) {
+            // Previous card (Right in Persian RTL)
+            offset = -1;
           }
 
           return (
             <GameCard
               key={game.id}
               game={game}
-              currentIndex={idx}
-              totalGames={GAMES_LIST.length}
-              position={position}
+              offset={offset}
               dragOffset={idx === currentIndex ? dragOffset : 0}
               isDragging={isDragging}
               onSelectCard={() => {

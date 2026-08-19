@@ -334,10 +334,10 @@ export const ChessGame: React.FC<ChessGameProps> = ({
             </div>
           </div>
 
-          {/* 8x8 Chessboard Container */}
-          <div className="relative aspect-square w-full max-w-[340px] sm:max-w-[440px] mx-auto bg-slate-950 p-1.5 sm:p-2.5 rounded-2xl border-2 border-amber-500/40 shadow-2xl shadow-black/80 select-none overflow-hidden">
+          {/* 8x8 Chessboard Container with Luxury Persian Walnut & Gold Border */}
+          <div className="relative aspect-square w-full max-w-[350px] sm:max-w-[460px] mx-auto bg-gradient-to-b from-[#241a14] via-[#140e0a] to-[#0a0705] p-2.5 sm:p-3.5 rounded-3xl border-4 border-amber-500/70 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(245,158,11,0.25)] select-none overflow-hidden ring-1 ring-amber-400/50">
             {/* Grid */}
-            <div className="grid grid-cols-8 grid-rows-8 w-full h-full rounded-xl overflow-hidden border border-slate-800">
+            <div className="grid grid-cols-8 grid-rows-8 w-full h-full rounded-2xl overflow-hidden border-2 border-amber-900/60 shadow-inner">
               {Array.from({ length: 8 }).map((_, rowIdx) => {
                 const r = isFlipped ? 7 - rowIdx : rowIdx;
                 return Array.from({ length: 8 }).map((_, colIdx) => {
@@ -355,19 +355,33 @@ export const ChessGame: React.FC<ChessGameProps> = ({
                       key={`${r}-${c}`}
                       id={`chess-cell-${r}-${c}`}
                       onClick={() => handleCellClick(r, c)}
-                      className={`relative flex items-center justify-center text-2xl sm:text-3xl md:text-4xl transition-all cursor-pointer ${
-                        isLight ? 'bg-[#c7b99c]' : 'bg-[#6b4c35]'
-                      } ${isSelected ? 'ring-2 sm:ring-4 ring-amber-400 ring-inset z-10' : ''} ${
-                        isKingCheckSquare ? 'bg-red-700/80 animate-pulse' : ''
+                      className={`relative flex items-center justify-center text-2xl sm:text-3xl md:text-4xl transition-all duration-150 cursor-pointer ${
+                        isLight
+                          ? 'bg-gradient-to-br from-[#dfd4be] to-[#c7b99c] hover:brightness-105'
+                          : 'bg-gradient-to-br from-[#5a3824] to-[#3f2516] hover:brightness-110'
+                      } ${isSelected ? 'ring-2 sm:ring-4 ring-amber-400 ring-inset z-10 brightness-110' : ''} ${
+                        isKingCheckSquare ? 'bg-gradient-to-r from-red-600 to-rose-700 animate-pulse text-white shadow-inner' : ''
                       }`}
                     >
-                      {/* Piece Icon */}
+                      {/* File / Rank Coordinates on edge cells */}
+                      {colIdx === 0 && (
+                        <span className={`absolute top-0.5 right-1 text-[9px] font-bold select-none ${isLight ? 'text-amber-950/60' : 'text-amber-200/50'}`}>
+                          {8 - r}
+                        </span>
+                      )}
+                      {rowIdx === 7 && (
+                        <span className={`absolute bottom-0.5 left-1 text-[9px] font-bold select-none ${isLight ? 'text-amber-950/60' : 'text-amber-200/50'}`}>
+                          {String.fromCharCode(65 + c)}
+                        </span>
+                      )}
+
+                      {/* Piece Icon with 3D Luxury Shadows */}
                       {piece && (
                         <span
-                          className={`drop-shadow-md select-none transition-transform active:scale-95 ${
+                          className={`select-none transition-transform active:scale-95 leading-none ${
                             piece.color === 'w'
-                              ? 'text-slate-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]'
-                              : 'text-slate-950 drop-shadow-[0_1px_2px_rgba(255,255,255,0.4)]'
+                              ? 'text-amber-100 filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] drop-shadow-[0_0_2px_rgba(255,255,255,0.8)] hover:scale-105 transition-transform'
+                              : 'text-[#1c120c] filter drop-shadow-[0_3px_5px_rgba(245,158,11,0.3)] drop-shadow-[0_0_1px_rgba(255,255,255,0.7)] hover:scale-105 transition-transform'
                           }`}
                         >
                           {PIECE_SYMBOLS[`${piece.color}-${piece.type}`]}
@@ -379,8 +393,8 @@ export const ChessGame: React.FC<ChessGameProps> = ({
                         <div
                           className={`absolute rounded-full pointer-events-none ${
                             piece
-                              ? 'w-full h-full border-2 sm:border-4 border-amber-400/80 bg-amber-400/20'
-                              : 'w-2.5 sm:w-4 h-2.5 sm:h-4 bg-amber-400/80 shadow-md shadow-amber-500'
+                              ? 'w-full h-full border-2 sm:border-4 border-amber-400/90 bg-amber-400/25 ring-2 ring-amber-300 animate-pulse'
+                              : 'w-3 sm:w-4.5 h-3 sm:h-4.5 bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.9)] ring-2 ring-yellow-300'
                           }`}
                         />
                       )}

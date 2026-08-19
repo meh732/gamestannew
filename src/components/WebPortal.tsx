@@ -211,69 +211,80 @@ export const WebPortal: React.FC<WebPortalProps> = ({
         </div>
       </div>
 
-      {/* 3. Ultra-Fast Responsive Bento Game Grid */}
+      {/* 3. Ultra-Fast Responsive Bento Game Grid with 3D Thumbnails */}
       {viewStyle === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
           {filteredGames.map((game) => (
             <div
               key={game.id}
               id={`game-pod-${game.id}`}
-              className="group rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 p-4 sm:p-5 flex flex-col justify-between gap-3 shadow-lg hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-200 hover:-translate-y-1 relative overflow-hidden"
+              className="group rounded-3xl bg-gradient-to-b from-[#18110b] to-[#0c0906] border-2 border-amber-500/30 hover:border-amber-400/80 flex flex-col justify-between shadow-xl hover:shadow-[0_15px_30px_rgba(245,158,11,0.2)] transition-all duration-300 hover:-translate-y-1 relative overflow-hidden"
             >
-              {/* Top Row: Icon + Badge + Rating */}
-              <div className="flex items-start justify-between">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 via-amber-600/15 to-transparent border border-amber-500/30 flex items-center justify-center text-2xl shadow-md">
-                  {game.icon}
-                </div>
+              {/* 3D Visual Artwork Thumbnail Header */}
+              <div className="relative h-44 w-full overflow-hidden bg-black">
+                {game.heroImage && (
+                  <img
+                    src={game.heroImage}
+                    alt={game.title}
+                    className="w-full h-full object-cover object-center filter brightness-[0.85] contrast-[1.1] transition-transform duration-500 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#18110b] via-transparent to-black/60 pointer-events-none" />
 
-                <div className="flex flex-col items-end gap-1">
-                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 font-sans shadow-sm">
-                    {game.badge}
-                  </span>
-                  <div className="flex items-center gap-1 text-xs text-amber-300 font-bold">
-                    <Star className="w-3 h-3 fill-current text-amber-400" />
+                {/* Top Overlay: Icon + Badge + Rating */}
+                <div className="absolute top-3 inset-x-3 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-amber-500/40 text-amber-300 text-xs font-bold shadow-md">
+                    <span className="text-sm">{game.icon}</span>
+                    <span>{game.badge}</span>
+                  </div>
+
+                  <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-amber-500/30 text-amber-300 text-xs font-bold shadow-md">
+                    <Star className="w-3.5 h-3.5 fill-current text-amber-400" />
                     <span>{game.rating}</span>
                   </div>
                 </div>
               </div>
 
-              {/* Middle Lore & Info */}
-              <div className="flex flex-col gap-1.5 my-1">
-                <div className="text-[11px] text-amber-400/90 font-black">{game.heroName} • {game.heroRole}</div>
-                <h3 className="text-base font-black text-white group-hover:text-amber-300 transition-colors">
-                  {game.title}
-                </h3>
-                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
-                  {game.description}
-                </p>
-              </div>
+              {/* Card Body */}
+              <div className="p-4 flex flex-col gap-2.5">
+                <div>
+                  <h3 className="text-base font-black text-white group-hover:text-amber-300 transition-colors">
+                    {game.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed mt-0.5">
+                    {game.description}
+                  </p>
+                </div>
 
-              {/* Online Player Meta */}
-              <div className="flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/80 pt-2.5">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
-                  <span className="text-[11px]">{game.playersCount} آنلاین</span>
-                </span>
-                <span className="text-amber-400/90 font-bold text-[11px]">ورودی: {game.minCoins} سکه</span>
-              </div>
+                {/* Online Player Meta */}
+                <div className="flex items-center justify-between text-xs text-slate-400 border-t border-amber-900/30 pt-2">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-[11px]">{game.playersCount} آنلاین</span>
+                  </span>
+                  <span className="text-amber-400/90 font-bold text-[11px]">ورودی: {game.minCoins} سکه</span>
+                </div>
 
-              {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-2 pt-1 font-bold text-xs">
-                <button
-                  onClick={() => onSelectGame(game.id, 'ai')}
-                  className="py-2.5 px-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 text-slate-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
-                >
-                  <Bot className="w-3.5 h-3.5 text-amber-400" />
-                  <span>بازی با هوش</span>
-                </button>
+                {/* Action Buttons */}
+                <div className="grid grid-cols-2 gap-2 pt-1 font-bold text-xs">
+                  <button
+                    onClick={() => onSelectGame(game.id, 'ai')}
+                    className="py-2.5 px-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-500/40 text-slate-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <Bot className="w-3.5 h-3.5 text-amber-400" />
+                    <span>نبرد با هوش</span>
+                  </button>
 
-                <button
-                  onClick={() => onSelectGame(game.id, '2p')}
-                  className="py-2.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
-                >
-                  <Users className="w-3.5 h-3.5 text-slate-950" />
-                  <span>دونفره / آنلاین</span>
-                </button>
+                  <button
+                    onClick={() => onSelectGame(game.id, '2p')}
+                    className="py-2.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <Users className="w-3.5 h-3.5 text-slate-950" />
+                    <span>دونفره / آنلاین</span>
+                  </button>
+                </div>
               </div>
             </div>
           ))}

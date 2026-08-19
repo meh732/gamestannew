@@ -302,10 +302,10 @@ export const DoozGame: React.FC<DoozGameProps> = ({
         </button>
       </div>
 
-      {/* Board Stage */}
-      <div className="relative aspect-square w-full max-w-[380px] mx-auto bg-slate-950 p-3 rounded-3xl border-2 border-amber-500/40 shadow-2xl shadow-black/80">
+      {/* Board Stage with Ancient Mythical Obsidian & Molten Gold Theme */}
+      <div className="relative aspect-square w-full max-w-[380px] mx-auto bg-gradient-to-b from-[#221810] via-[#120d09] to-[#080503] p-3.5 sm:p-4 rounded-3xl border-4 border-amber-500/70 shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(245,158,11,0.25)] ring-1 ring-amber-400/50">
         <div
-          className={`grid gap-2 w-full h-full bg-slate-900/80 p-2 rounded-2xl border border-slate-800 ${
+          className={`grid gap-2 w-full h-full bg-[#0a0705] p-2.5 rounded-2xl border-2 border-amber-900/60 shadow-inner ${
             gridSize === 3 ? 'grid-cols-3 grid-rows-3' : 'grid-cols-5 grid-rows-5 gap-1.5'
           }`}
         >
@@ -316,21 +316,21 @@ export const DoozGame: React.FC<DoozGameProps> = ({
                 key={idx}
                 id={`dooz-cell-${idx}`}
                 onClick={() => handleCellClick(idx)}
-                className={`flex items-center justify-center rounded-xl font-black transition-all cursor-pointer select-none ${
+                className={`flex items-center justify-center rounded-2xl font-black transition-all duration-200 cursor-pointer select-none ${
                   gridSize === 3 ? 'text-4xl sm:text-5xl' : 'text-2xl sm:text-3xl'
                 } ${
                   isWinningCell
-                    ? 'bg-amber-400 text-slate-950 scale-105 shadow-lg shadow-amber-500/50 z-10'
-                    : 'bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700'
+                    ? 'bg-gradient-to-br from-amber-300 via-amber-500 to-yellow-600 text-slate-950 scale-105 shadow-[0_0_20px_rgba(245,158,11,0.9)] z-10 border-2 border-yellow-200 ring-2 ring-amber-400'
+                    : 'bg-gradient-to-br from-[#241a12] via-[#18110b] to-[#0f0a06] hover:brightness-125 border border-amber-900/40 shadow-[inset_0_2px_4px_rgba(255,255,255,0.05),0_4px_8px_rgba(0,0,0,0.6)]'
                 }`}
               >
                 {cell === 'X' && (
-                  <span className={isWinningCell ? 'text-slate-950' : 'text-amber-400 drop-shadow-sm'}>
+                  <span className={`transition-transform transform hover:scale-110 filter ${isWinningCell ? 'drop-shadow' : 'drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]'}`}>
                     ⚔️
                   </span>
                 )}
                 {cell === 'O' && (
-                  <span className={isWinningCell ? 'text-slate-950' : 'text-rose-400 drop-shadow-sm'}>
+                  <span className={`transition-transform transform hover:scale-110 filter ${isWinningCell ? 'drop-shadow' : 'drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]'}`}>
                     🛡️
                   </span>
                 )}

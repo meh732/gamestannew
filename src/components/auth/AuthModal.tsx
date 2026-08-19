@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { UserProfile } from '../../types';
 import { sounds } from '../../utils/audio';
 import confetti from 'canvas-confetti';
@@ -14,6 +14,7 @@ import {
   ArrowRight,
   LogOut,
   UserCheck,
+  Lock,
 } from 'lucide-react';
 
 interface AuthModalProps {
@@ -31,11 +32,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   currentUser,
   onUpdateUser,
 }) => {
-  const [authTab, setAuthTab] = useState<'google' | 'phone' | 'profile'>('google');
+  // If not logged in, only allow 'google' or 'phone'. If logged in, default to 'profile'
+  const [authTab, setAuthTab] = useState<'google' | 'phone' | 'profile'>(
+    currentUser.isLoggedIn ? 'profile' : 'google'
+  );
+
+  useEffect(() => {
+    if (!currentUser.isLoggedIn && authTab === 'profile') {
+      setAuthTab('google');
+    } else if (currentUser.isLoggedIn && authTab !== 'profile') {
+      setAuthTab('profile');
+    }
+  }, [currentUser.isLoggedIn]);
   
   // Google state
-  const [googleEmail, setGoogleEmail] = useState(currentUser.email || 'meh732@gmail.com');
-  const [googleName, setGoogleName] = useState(currentUser.displayName || 'کاربر گوگل');
+  const [googleEmail, setGoogleEmail] = useState(currentUser.email || 'user@gmail.com');
+  const [googleName, setGoogleName] = useState(currentUser.displayName || 'کاربر گیمستان');
   const [googleLoading, setGoogleLoading] = useState(false);
 
   // Phone OTP state
@@ -45,7 +57,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [generatedCode, setGeneratedCode] = useState<string | null>(null);
   const [phoneCountdown, setPhoneCountdown] = useState(60);
 
-  // Profile Edit state
+  // Profile Edit state (Only for logged-in users)
   const [displayName, setDisplayName] = useState(currentUser.displayName);
   const [username, setUsername] = useState(currentUser.username);
   const [selectedAvatar, setSelectedAvatar] = useState(currentUser.avatar);
@@ -79,7 +91,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       sounds.playWin();
       confetti({ particleCount: 80, spread: 70 });
       showToast(`خوش آمدید! ورود موفق با حساب گوگل (${googleEmail})`);
-      setTimeout(() => onClose(), 1200);
+      setAuthTab('profile');
     }, 800);
   };
 
@@ -97,7 +109,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setOtpStep('verify');
     setPhoneCountdown(60);
     sounds.playMove();
-    showToast(`کد تایید پیامکی شبیه‌سازی شده: ${code}`);
+    showToast(`کد تایید پیامکی: ${code}`);
 
     const timer = setInterval(() => {
       setPhoneCountdown((prev) => {
@@ -128,10 +140,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     sounds.playWin();
     confetti({ particleCount: 80, spread: 70 });
     showToast('ورود با شماره موبایل با موفقیت انجام شد!');
-    setTimeout(() => onClose(), 1200);
+    setAuthTab('profile');
   };
 
-  // Custom File Upload
+  // Custom File Upload (Only accessible when logged in)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -179,29 +191,38 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       authMethod: 'guest',
     });
     sounds.playMove();
+    setAuthTab('google');
     showToast('از حساب کاربری خارج شدید.');
-    setTimeout(() => onClose(), 800);
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/80 backdrop-blur-md font-['Vazirmatn'] text-slate-100">
       <div className="relative w-full max-w-lg bg-slate-900 border-2 border-amber-500/40 rounded-3xl p-5 sm:p-6 shadow-2xl shadow-black overflow-hidden flex flex-col gap-4">
+        
         {/* Header */}
         <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 flex items-center justify-center text-xl shadow-lg shadow-amber-500/30">
-              👑
+              {currentUser.isLoggedIn ? '👑' : '🔒'}
             </div>
             <div>
-              <h2 className="text-lg font-black text-amber-300">ورود و مدیریت پروفایل گیمستان</h2>
-              <p className="text-xs text-slate-400">اتصال حساب گوگل، شماره همراه و آپلود عکس دلخواه</p>
+              <h2 className="text-lg font-black text-amber-300">
+                {currentUser.isLoggedIn
+                  ? 'مدیریت پروفایل و حساب کاربری'
+                  : 'ورود و عضویت در گیمستان'}
+              </h2>
+              <p className="text-xs text-slate-400">
+                {currentUser.isLoggedIn
+                  ? 'تنظیم عکس اختصاصی، تغییر نام و مدیریت حساب'
+                  : 'جهت ذخیره سوابق و تنظیم عکس ابتدا وارد شوید'}
+              </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
             aria-label="بستن"
-            className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -217,7 +238,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Status Badge */}
         <div className="flex items-center justify-between bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
           <div className="flex items-center gap-2.5">
-            {currentUser.customAvatarUrl ? (
+            {currentUser.isLoggedIn && currentUser.customAvatarUrl ? (
               <img
                 src={currentUser.customAvatarUrl}
                 alt={currentUser.displayName}
@@ -225,22 +246,26 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               />
             ) : (
               <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-2xl border border-amber-500/30">
-                {currentUser.avatar}
+                {currentUser.avatar || '👤'}
               </div>
             )}
             <div>
               <div className="text-sm font-bold text-slate-100 flex items-center gap-1.5">
-                <span>{currentUser.displayName}</span>
-                {currentUser.isLoggedIn && (
+                <span>{currentUser.isLoggedIn ? currentUser.displayName : 'کاربر مهمان'}</span>
+                {currentUser.isLoggedIn ? (
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded font-bold">
                     تایید شده ✓
+                  </span>
+                ) : (
+                  <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded font-bold">
+                    ثبت‌نام نشده
                   </span>
                 )}
               </div>
               <div className="text-xs text-slate-400">
                 {currentUser.isLoggedIn
-                  ? `ورود از طریق ${currentUser.authMethod === 'google' ? 'گوگل' : 'شماره همراه'}`
-                  : 'حساب مهمان (بدون ثبت‌نام)'}
+                  ? `ورود از طریق ${currentUser.authMethod === 'google' ? 'حساب گوگل' : 'شماره همراه'}`
+                  : 'برای دسترسی به تنظیمات عکس و کیف‌پول وارد شوید'}
               </div>
             </div>
           </div>
@@ -248,7 +273,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {currentUser.isLoggedIn && (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-xs font-bold transition-all"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-xs font-bold transition-all cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>خروج</span>
@@ -256,50 +281,52 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           )}
         </div>
 
-        {/* Tab Selection */}
-        <div className="grid grid-cols-3 gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
-          <button
-            onClick={() => setAuthTab('google')}
-            className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-              authTab === 'google'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <span>ورود با گوگل</span>
-          </button>
+        {/* Tab Selection: STRICTLY CONDITIONAL */}
+        {!currentUser.isLoggedIn ? (
+          /* GUEST USER TABS: Only Google & Phone Login options */
+          <div className="grid grid-cols-2 gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+            <button
+              onClick={() => setAuthTab('google')}
+              className={`py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                authTab === 'google'
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>ورود با گوگل</span>
+            </button>
 
-          <button
-            onClick={() => setAuthTab('phone')}
-            className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-              authTab === 'phone'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Smartphone className="w-3.5 h-3.5" />
-            <span>شماره همراه</span>
-          </button>
+            <button
+              onClick={() => setAuthTab('phone')}
+              className={`py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                authTab === 'phone'
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Smartphone className="w-3.5 h-3.5" />
+              <span>ورود با شماره همراه</span>
+            </button>
+          </div>
+        ) : (
+          /* LOGGED IN USER: Profile tab header */
+          <div className="flex items-center justify-between bg-amber-500/15 border border-amber-500/30 px-3.5 py-2 rounded-2xl text-xs font-bold text-amber-300">
+            <span className="flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>تنظیمات حساب کاربری و عکس پروفایل</span>
+            </span>
+            <span className="text-[11px] text-slate-300">
+              سطح {currentUser.level} | {currentUser.coins} سکه
+            </span>
+          </div>
+        )}
 
-          <button
-            onClick={() => setAuthTab('profile')}
-            className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-              authTab === 'profile'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Upload className="w-3.5 h-3.5" />
-            <span>آپلود عکس و نام</span>
-          </button>
-        </div>
-
-        {/* Tab 1: Google Login */}
-        {authTab === 'google' && (
+        {/* Tab 1: Google Login (Only for Guests) */}
+        {!currentUser.isLoggedIn && authTab === 'google' && (
           <div className="flex flex-col gap-4 py-2">
             <div className="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 flex flex-col gap-3">
-              <div className="text-xs text-slate-300">
-                با اتصال سریع به حساب گوگل خود، سوابق بازی‌ها، مدال‌ها، سکه‌ها و سطح شما در تمام دستگاه‌ها همگام‌سازی می‌شود.
+              <div className="text-xs text-slate-300 leading-relaxed">
+                با اتصال مستقیم به حساب گوگل خود، سوابق بازی‌ها، مدال‌ها، سکه‌ها و عکس پروفایل شما همگام‌سازی می‌شود.
               </div>
 
               <div>
@@ -308,19 +335,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   type="email"
                   value={googleEmail}
                   onChange={(e) => setGoogleEmail(e.target.value)}
-                  placeholder="مثال: yourname@gmail.com"
+                  placeholder="yourname@gmail.com"
                   dir="ltr"
                   className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] text-slate-400 font-bold block mb-1">نام نمایشی گوگل:</label>
+                <label className="text-[11px] text-slate-400 font-bold block mb-1">نام شما در گوگل:</label>
                 <input
                   type="text"
                   value={googleName}
                   onChange={(e) => setGoogleName(e.target.value)}
-                  placeholder="نام شما در گوگل"
+                  placeholder="نام نمایشی"
                   className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-amber-400"
                 />
               </div>
@@ -331,7 +358,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               disabled={googleLoading}
               className="w-full py-3 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-3 shadow-lg shadow-white/10 active:scale-95 transition-all cursor-pointer"
             >
-              {/* Google G SVG */}
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
@@ -355,8 +381,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        {/* Tab 2: Mobile OTP Login */}
-        {authTab === 'phone' && (
+        {/* Tab 2: Mobile OTP Login (Only for Guests) */}
+        {!currentUser.isLoggedIn && authTab === 'phone' && (
           <div className="flex flex-col gap-4 py-2">
             {otpStep === 'request' ? (
               <form onSubmit={handleSendOtp} className="flex flex-col gap-3">
@@ -434,8 +460,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        {/* Tab 3: Custom Avatar Upload & Profile */}
-        {authTab === 'profile' && (
+        {/* Tab 3: Custom Avatar Upload & Profile (STRICTLY SHOWN ONLY AFTER LOGIN) */}
+        {currentUser.isLoggedIn && (
           <form onSubmit={handleSaveProfile} className="flex flex-col gap-3.5 py-1">
             {/* Custom Photo Upload Area */}
             <div className="bg-slate-950/70 p-4 rounded-2xl border border-slate-800 flex flex-col items-center gap-3">
@@ -480,7 +506,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold flex items-center gap-1.5 border border-slate-700 transition-all"
+                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold flex items-center gap-1.5 border border-slate-700 transition-all cursor-pointer"
               >
                 <Upload className="w-3.5 h-3.5" />
                 <span>بارگذاری از گالری / فایل دستگاه</span>
@@ -500,7 +526,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       setCustomAvatarPreview(undefined);
                       sounds.playClick();
                     }}
-                    className={`aspect-square rounded-xl text-xl flex items-center justify-center border transition-all ${
+                    className={`aspect-square rounded-xl text-xl flex items-center justify-center border transition-all cursor-pointer ${
                       selectedAvatar === av && !customAvatarPreview
                         ? 'bg-amber-500/20 border-amber-400 scale-105 shadow-md shadow-amber-500/20'
                         : 'bg-slate-900 border-slate-800 hover:bg-slate-800'
@@ -538,7 +564,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <button
               type="submit"
-              className="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 active:scale-95 transition-all cursor-pointer mt-1"
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 active:scale-95 transition-all cursor-pointer mt-1"
             >
               ذخیره تغییرات پروفایل و عکس ✓
             </button>

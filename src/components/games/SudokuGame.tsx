@@ -209,9 +209,9 @@ export const SudokuGame: React.FC<SudokuGameProps> = ({ onBack, onWinReward }) =
         </div>
       </div>
 
-      {/* 9x9 Grid */}
-      <div className="relative aspect-square w-full max-w-[440px] mx-auto bg-slate-950 p-2.5 sm:p-3 rounded-2xl border-2 border-sky-500/40 shadow-2xl shadow-black/80">
-        <div className="grid grid-cols-9 grid-rows-9 gap-0.5 w-full h-full bg-sky-950/60 rounded-xl overflow-hidden border-2 border-sky-500/60">
+      {/* 9x9 Grid with Persian Sapphire & Gold Border Theme */}
+      <div className="relative aspect-square w-full max-w-[440px] mx-auto bg-gradient-to-b from-[#0e1d2c] via-[#09121d] to-[#04080e] p-3 sm:p-4 rounded-3xl border-4 border-sky-500/70 shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(14,165,233,0.25)] ring-1 ring-sky-400/50">
+        <div className="grid grid-cols-9 grid-rows-9 gap-0.5 w-full h-full bg-[#060c14] rounded-2xl overflow-hidden border-2 border-sky-600/70 shadow-inner">
           {currentGrid.map((row, r) =>
             row.map((val, c) => {
               const isInitial = initialGrid[r][c] !== 0;
@@ -220,8 +220,8 @@ export const SudokuGame: React.FC<SudokuGameProps> = ({ onBack, onWinReward }) =
               const cellNotes = Array.from(notes[r][c]);
 
               // Border accents for 3x3 subgrids
-              const borderRight = c % 3 === 2 && c !== 8 ? 'border-r-2 border-r-sky-400/80' : '';
-              const borderBottom = r % 3 === 2 && r !== 8 ? 'border-b-2 border-b-sky-400/80' : '';
+              const borderRight = c % 3 === 2 && c !== 8 ? 'border-r-2 border-r-sky-400/90' : '';
+              const borderBottom = r % 3 === 2 && r !== 8 ? 'border-b-2 border-b-sky-400/90' : '';
 
               return (
                 <button
@@ -231,16 +231,18 @@ export const SudokuGame: React.FC<SudokuGameProps> = ({ onBack, onWinReward }) =
                     setSelectedCell([r, c]);
                     sounds.playClick();
                   }}
-                  className={`relative flex items-center justify-center font-bold text-lg sm:text-xl transition-colors ${
-                    isInitial ? 'bg-slate-900 text-sky-300 font-extrabold' : 'bg-slate-950 text-slate-100'
-                  } ${isSelected ? 'bg-sky-700/60 ring-2 ring-sky-400 ring-inset z-10' : 'hover:bg-slate-850'} ${
-                    isConflict ? 'text-red-400 bg-red-950/50' : ''
+                  className={`relative flex items-center justify-center font-bold text-lg sm:text-xl transition-all duration-150 cursor-pointer select-none ${
+                    isInitial
+                      ? 'bg-gradient-to-br from-[#132438] to-[#0d1a29] text-amber-300 font-black'
+                      : 'bg-gradient-to-br from-[#0c1622] to-[#080d14] text-slate-100'
+                  } ${isSelected ? 'bg-sky-600/80 ring-2 sm:ring-4 ring-sky-300 ring-inset z-10 brightness-125' : 'hover:brightness-125'} ${
+                    isConflict ? 'text-rose-400 bg-rose-950/70' : ''
                   } ${borderRight} ${borderBottom}`}
                 >
                   {val !== 0 ? (
-                    val
+                    <span className={isInitial ? 'drop-shadow-[0_1px_3px_rgba(245,158,11,0.5)]' : ''}>{val}</span>
                   ) : (
-                    <div className="grid grid-cols-3 grid-rows-3 w-full h-full p-0.5 text-[8px] text-slate-400 font-mono pointer-events-none">
+                    <div className="grid grid-cols-3 grid-rows-3 w-full h-full p-0.5 text-[8px] text-sky-400/70 font-mono pointer-events-none">
                       {cellNotes.map((n) => (
                         <span key={n} className="flex items-center justify-center">
                           {n}

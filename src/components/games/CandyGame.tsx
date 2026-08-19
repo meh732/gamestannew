@@ -8,7 +8,15 @@ interface CandyGameProps {
   onWinReward?: (coins: number) => void;
 }
 
-const CANDY_TYPES = ['🍬', '🍭', '🍫', '🍩', '🧁', '🍓'];
+const CANDY_TYPES = ['💎', '🔴', '🟢', '🔵', '🟡', '🔮'];
+const CANDY_NAMES: Record<string, string> = {
+  '💎': 'الماس کوه نور',
+  '🔴': 'یاقوت برمه',
+  '🟢': 'زمرد شاهانه',
+  '🔵': 'فیروزه نیشابور',
+  '🟡': 'زبرجد زرین',
+  '🔮': 'لعل بدخشان',
+};
 const GRID_SIZE = 7;
 
 export const CandyGame: React.FC<CandyGameProps> = ({ onBack, onWinReward }) => {
@@ -170,14 +178,16 @@ export const CandyGame: React.FC<CandyGameProps> = ({ onBack, onWinReward }) => 
   return (
     <div className="w-full max-w-xl mx-auto p-3 sm:p-5 flex flex-col gap-4 text-slate-100 font-['Vazirmatn']">
       {/* Header */}
-      <div className="flex items-center justify-between bg-slate-900/90 border border-pink-500/30 rounded-2xl p-3 sm:p-4 backdrop-blur-md shadow-lg shadow-black/40">
+      <div className="flex items-center justify-between bg-gradient-to-r from-purple-950/90 via-slate-900/90 to-pink-950/90 border-2 border-pink-500/40 rounded-2xl p-3 sm:p-4 backdrop-blur-md shadow-lg shadow-black/40">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-2xl shadow-md shadow-pink-500/20">
-            🍬
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-700 flex items-center justify-center text-2xl shadow-lg shadow-pink-500/30">
+            💎
           </div>
           <div>
-            <h1 id={headingId} className="text-lg sm:text-xl font-bold text-pink-300">جورچین آبنبات گیمستان</h1>
-            <p className="text-xs text-slate-400">تطبیق ۳تایی آبنبات‌های رنگارنگ</p>
+            <h1 id={headingId} className="text-lg sm:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-200 to-amber-300">
+              هفت‌خان جواهرات سلطنتی
+            </h1>
+            <p className="text-xs text-pink-200/70">تطبیق ۳تایی الماس، یاقوت و زمردهای شاهانه</p>
           </div>
         </div>
 
@@ -193,9 +203,9 @@ export const CandyGame: React.FC<CandyGameProps> = ({ onBack, onWinReward }) => 
       </div>
 
       {/* Stats Bar */}
-      <div className="flex items-center justify-between bg-slate-900/80 p-3 rounded-2xl border border-slate-800 text-xs font-bold">
+      <div className="flex items-center justify-between bg-slate-900/80 p-3 rounded-2xl border border-pink-500/30 text-xs font-bold">
         <div className="flex items-center gap-1.5 text-pink-300">
-          <Flame className="w-4 h-4" />
+          <Flame className="w-4 h-4 text-pink-400" />
           <span>امتیاز: {score}</span>
         </div>
         <div className="flex items-center gap-1.5 text-amber-300">
@@ -203,9 +213,9 @@ export const CandyGame: React.FC<CandyGameProps> = ({ onBack, onWinReward }) => 
         </div>
       </div>
 
-      {/* 7x7 Grid */}
-      <div className="relative aspect-square w-full max-w-[420px] mx-auto bg-slate-950 p-3 rounded-2xl border-2 border-pink-500/40 shadow-2xl shadow-black/80">
-        <div className="grid grid-cols-7 grid-rows-7 gap-1.5 w-full h-full bg-slate-900/90 p-2 rounded-xl border border-slate-800">
+      {/* 7x7 Grid with Luxury Royal Crystal Container */}
+      <div className="relative aspect-square w-full max-w-[420px] mx-auto bg-gradient-to-b from-[#221028] via-[#150a1b] to-[#0d0511] p-3 sm:p-4 rounded-3xl border-4 border-pink-500/60 shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(236,72,153,0.25)] ring-1 ring-pink-400/50">
+        <div className="grid grid-cols-7 grid-rows-7 gap-1.5 w-full h-full bg-[#0d0712] p-2 rounded-2xl border-2 border-pink-900/60 shadow-inner">
           {grid.map((row, r) =>
             row.map((candy, c) => {
               const isSelected = selectedCell && selectedCell[0] === r && selectedCell[1] === c;
@@ -214,13 +224,15 @@ export const CandyGame: React.FC<CandyGameProps> = ({ onBack, onWinReward }) => 
                   key={`${r}-${c}`}
                   id={`candy-cell-${r}-${c}`}
                   onClick={() => handleCellClick(r, c)}
-                  className={`flex items-center justify-center rounded-xl text-2xl sm:text-3xl transition-all cursor-pointer select-none ${
+                  className={`flex items-center justify-center rounded-xl text-2xl sm:text-3xl transition-all duration-150 cursor-pointer select-none ${
                     isSelected
-                      ? 'bg-pink-500/40 ring-2 ring-pink-400 scale-105'
-                      : 'bg-slate-800/80 hover:bg-slate-700/80'
+                      ? 'bg-gradient-to-br from-pink-500 to-purple-600 ring-2 ring-pink-300 scale-110 shadow-[0_0_15px_rgba(236,72,153,0.8)] z-10'
+                      : 'bg-gradient-to-br from-[#271431] to-[#170c1e] hover:brightness-125 border border-pink-900/30'
                   }`}
                 >
-                  {candy}
+                  <span className="filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:scale-110 transition-transform">
+                    {candy}
+                  </span>
                 </button>
               );
             })

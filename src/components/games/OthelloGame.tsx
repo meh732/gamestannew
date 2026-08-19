@@ -214,9 +214,9 @@ export const OthelloGame: React.FC<OthelloGameProps> = ({
         </div>
       )}
 
-      {/* 8x8 Board Stage */}
-      <div className="relative aspect-square w-full max-w-[460px] mx-auto bg-slate-950 p-3 rounded-3xl border-2 border-cyan-500/40 shadow-2xl shadow-black/80">
-        <div className="grid grid-cols-8 grid-rows-8 gap-1 w-full h-full bg-[#1b4332] p-2 rounded-2xl border border-emerald-800/80 shadow-inner">
+      {/* 8x8 Board Stage with Persian Emerald Velvet & Gold Bevel Theme */}
+      <div className="relative aspect-square w-full max-w-[460px] mx-auto bg-gradient-to-b from-[#0e251b] via-[#081711] to-[#040c09] p-3 sm:p-4 rounded-3xl border-4 border-emerald-500/70 shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(16,185,129,0.25)] ring-1 ring-emerald-400/50">
+        <div className="grid grid-cols-8 grid-rows-8 gap-1.5 w-full h-full bg-gradient-to-br from-[#103b29] to-[#0a2318] p-2 sm:p-2.5 rounded-2xl border-2 border-emerald-800/80 shadow-inner">
           {board.map((row, r) =>
             row.map((disc, c) => {
               const isValid = validMoves.some((m) => m.r === r && m.c === c);
@@ -225,22 +225,26 @@ export const OthelloGame: React.FC<OthelloGameProps> = ({
                   key={`${r}-${c}`}
                   id={`othello-cell-${r}-${c}`}
                   onClick={() => handleCellClick(r, c)}
-                  className="relative flex items-center justify-center rounded-lg bg-[#2d6a4f]/70 hover:bg-[#2d6a4f] transition-all cursor-pointer select-none"
+                  className="relative flex items-center justify-center rounded-xl bg-[#1a4a35]/80 hover:bg-[#235d44] transition-all cursor-pointer select-none shadow-inner"
                 >
-                  {/* Disc */}
+                  {/* 3D Glossy Double-Sided Disc */}
                   {disc && (
                     <div
-                      className={`w-[82%] h-[82%] rounded-full shadow-lg transition-transform ${
+                      className={`w-[85%] h-[85%] rounded-full shadow-[0_4px_8px_rgba(0,0,0,0.9),inset_0_2px_4px_rgba(255,255,255,0.6)] transition-transform duration-300 hover:scale-105 ${
                         disc === 'black'
-                          ? 'bg-gradient-to-br from-slate-800 to-slate-950 border border-slate-700'
-                          : 'bg-gradient-to-br from-slate-100 to-slate-300 border border-slate-400 shadow-slate-900/50'
+                          ? 'bg-gradient-to-br from-slate-700 via-slate-900 to-black border-2 border-slate-600'
+                          : 'bg-gradient-to-br from-amber-100 via-amber-200 to-amber-400 border-2 border-amber-300'
                       }`}
-                    />
+                    >
+                      <div className="w-full h-full rounded-full border border-white/20 flex items-center justify-center">
+                        <div className={`w-2 h-2 rounded-full ${disc === 'black' ? 'bg-amber-500/40' : 'bg-slate-950/20'}`} />
+                      </div>
+                    </div>
                   )}
 
-                  {/* Move Hint Dot */}
+                  {/* Move Hint Glowing Dot */}
                   {!disc && isValid && (
-                    <div className="w-3 h-3 rounded-full bg-cyan-400/60 ring-2 ring-cyan-300 animate-pulse pointer-events-none" />
+                    <div className="w-3.5 h-3.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)] ring-2 ring-emerald-200 animate-pulse pointer-events-none" />
                   )}
                 </button>
               );

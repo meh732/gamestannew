@@ -386,31 +386,31 @@ export const LudoGame: React.FC<LudoGameProps> = ({
       {/* Main Board & Sidebar Grid */}
       <div className="w-full flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 sm:gap-6">
         
-        {/* The Authentic 15x15 Classic Cross Mench Board */}
-        <div className="relative w-[340px] h-[340px] sm:w-[460px] sm:h-[460px] md:w-[500px] md:h-[500px] bg-[#120e09] border-4 border-amber-500/60 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.9),0_0_30px_rgba(245,158,11,0.2)] p-2 relative overflow-hidden">
+        {/* The Authentic 15x15 Classic Cross Mench Board with Persian Inlaid Wood Theme */}
+        <div className="relative w-[340px] h-[340px] sm:w-[460px] sm:h-[460px] md:w-[500px] md:h-[500px] bg-gradient-to-b from-[#241a12] via-[#150f0a] to-[#0d0906] border-4 border-amber-500/80 rounded-3xl shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(245,158,11,0.25)] p-2.5 sm:p-3 relative overflow-hidden ring-1 ring-amber-400/60">
           
           {/* Inner Board 15x15 Matrix */}
-          <div className="w-full h-full relative grid grid-cols-15 grid-rows-15 gap-0.5 rounded-2xl bg-slate-950 p-1">
+          <div className="w-full h-full relative grid grid-cols-15 grid-rows-15 gap-0.5 rounded-2xl bg-[#090705] p-1.5 border-2 border-amber-900/60 shadow-inner">
             
             {/* 4 Bases in Corners */}
             {/* 1. Red Base (Top Left) */}
-            <div className="absolute top-2 left-2 w-[38%] h-[38%] rounded-2xl bg-gradient-to-br from-rose-950/80 to-rose-900/60 border-2 border-rose-500/60 p-2 flex flex-col justify-between shadow-inner">
-              <div className="flex items-center justify-between text-[11px] font-black text-rose-300">
-                <span>🏰 قلعه سهراب (قرمز)</span>
-                <span className="text-xs">🔴</span>
+            <div className="absolute top-2 left-2 w-[38%] h-[38%] rounded-2xl bg-gradient-to-br from-rose-950 via-rose-900/80 to-slate-950 border-2 border-rose-500/80 p-2 sm:p-2.5 flex flex-col justify-between shadow-[inset_0_2px_10px_rgba(244,63,94,0.3)]">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs font-black text-rose-200">
+                <span className="flex items-center gap-1">⚔️ قلعه سهراب یل</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.9)]" />
               </div>
-              <div className="grid grid-cols-2 gap-2 p-1">
+              <div className="grid grid-cols-2 gap-2 p-1 place-items-center">
                 {pieces.filter((p) => p.color === 'red' && p.state === 'base').map((p) => {
                   const canMove = moveablePieces.some((m) => m.color === 'red' && m.id === p.id);
                   return (
                     <button
                       key={p.id}
                       onClick={() => canMove && activeTurn === 'red' && movePiece(p, diceVal)}
-                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-rose-600 border-2 border-rose-300 shadow-md flex items-center justify-center text-xs font-black text-white transition-all cursor-pointer ${
-                        canMove && activeTurn === 'red' ? 'ring-4 ring-yellow-400 scale-110 animate-bounce' : 'opacity-90'
+                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-rose-400 via-rose-600 to-rose-900 border-2 border-rose-200 shadow-[0_4px_10px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.6)] flex items-center justify-center text-sm font-black text-white transition-all cursor-pointer ${
+                        canMove && activeTurn === 'red' ? 'ring-4 ring-yellow-400 scale-110 animate-bounce' : 'hover:scale-105'
                       }`}
                     >
-                      ♟️
+                      <span className="filter drop-shadow">♟️</span>
                     </button>
                   );
                 })}
@@ -418,23 +418,23 @@ export const LudoGame: React.FC<LudoGameProps> = ({
             </div>
 
             {/* 2. Blue Base (Top Right) */}
-            <div className="absolute top-2 right-2 w-[38%] h-[38%] rounded-2xl bg-gradient-to-bl from-cyan-950/80 to-cyan-900/60 border-2 border-cyan-500/60 p-2 flex flex-col justify-between shadow-inner">
-              <div className="flex items-center justify-between text-[11px] font-black text-cyan-300">
-                <span>🏰 قلعه سیمرغ (آبی)</span>
-                <span className="text-xs">🔵</span>
+            <div className="absolute top-2 right-2 w-[38%] h-[38%] rounded-2xl bg-gradient-to-bl from-cyan-950 via-cyan-900/80 to-slate-950 border-2 border-cyan-500/80 p-2 sm:p-2.5 flex flex-col justify-between shadow-[inset_0_2px_10px_rgba(6,182,212,0.3)]">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs font-black text-cyan-200">
+                <span className="flex items-center gap-1">🦅 قلعه سیمرغ دانا</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.9)]" />
               </div>
-              <div className="grid grid-cols-2 gap-2 p-1">
+              <div className="grid grid-cols-2 gap-2 p-1 place-items-center">
                 {pieces.filter((p) => p.color === 'blue' && p.state === 'base').map((p) => {
                   const canMove = moveablePieces.some((m) => m.color === 'blue' && m.id === p.id);
                   return (
                     <button
                       key={p.id}
                       onClick={() => canMove && activeTurn === 'blue' && movePiece(p, diceVal)}
-                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-cyan-600 border-2 border-cyan-300 shadow-md flex items-center justify-center text-xs font-black text-white transition-all cursor-pointer ${
-                        canMove && activeTurn === 'blue' ? 'ring-4 ring-yellow-400 scale-110 animate-bounce' : 'opacity-90'
+                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-cyan-300 via-cyan-500 to-cyan-900 border-2 border-cyan-100 shadow-[0_4px_10px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.6)] flex items-center justify-center text-sm font-black text-white transition-all cursor-pointer ${
+                        canMove && activeTurn === 'blue' ? 'ring-4 ring-yellow-400 scale-110 animate-bounce' : 'hover:scale-105'
                       }`}
                     >
-                      ♟️
+                      <span className="filter drop-shadow">♟️</span>
                     </button>
                   );
                 })}
@@ -442,23 +442,23 @@ export const LudoGame: React.FC<LudoGameProps> = ({
             </div>
 
             {/* 3. Green Base (Bottom Left) */}
-            <div className="absolute bottom-2 left-2 w-[38%] h-[38%] rounded-2xl bg-gradient-to-tr from-emerald-950/80 to-emerald-900/60 border-2 border-emerald-500/60 p-2 flex flex-col justify-between shadow-inner">
-              <div className="flex items-center justify-between text-[11px] font-black text-emerald-300">
-                <span>🏰 قلعه کاوه (سبز)</span>
-                <span className="text-xs">🟢</span>
+            <div className="absolute bottom-2 left-2 w-[38%] h-[38%] rounded-2xl bg-gradient-to-tr from-emerald-950 via-emerald-900/80 to-slate-950 border-2 border-emerald-500/80 p-2 sm:p-2.5 flex flex-col justify-between shadow-[inset_0_2px_10px_rgba(16,185,129,0.3)]">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs font-black text-emerald-200">
+                <span className="flex items-center gap-1">⚒️ قلعه کاوه آهنگر</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.9)]" />
               </div>
-              <div className="grid grid-cols-2 gap-2 p-1">
+              <div className="grid grid-cols-2 gap-2 p-1 place-items-center">
                 {pieces.filter((p) => p.color === 'green' && p.state === 'base').map((p) => {
                   const canMove = moveablePieces.some((m) => m.color === 'green' && m.id === p.id);
                   return (
                     <button
                       key={p.id}
                       onClick={() => canMove && activeTurn === 'green' && movePiece(p, diceVal)}
-                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-emerald-600 border-2 border-emerald-300 shadow-md flex items-center justify-center text-xs font-black text-white transition-all cursor-pointer ${
-                        canMove && activeTurn === 'green' ? 'ring-4 ring-yellow-400 scale-110 animate-bounce' : 'opacity-90'
+                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-emerald-400 via-emerald-600 to-emerald-900 border-2 border-emerald-200 shadow-[0_4px_10px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.6)] flex items-center justify-center text-sm font-black text-white transition-all cursor-pointer ${
+                        canMove && activeTurn === 'green' ? 'ring-4 ring-yellow-400 scale-110 animate-bounce' : 'hover:scale-105'
                       }`}
                     >
-                      ♟️
+                      <span className="filter drop-shadow">♟️</span>
                     </button>
                   );
                 })}
@@ -466,36 +466,35 @@ export const LudoGame: React.FC<LudoGameProps> = ({
             </div>
 
             {/* 4. Yellow Base (Bottom Right) */}
-            <div className="absolute bottom-2 right-2 w-[38%] h-[38%] rounded-2xl bg-gradient-to-tl from-amber-950/80 to-amber-900/60 border-2 border-amber-500/60 p-2 flex flex-col justify-between shadow-inner">
-              <div className="flex items-center justify-between text-[11px] font-black text-amber-300">
-                <span>🏰 قلعه زال (زرد)</span>
-                <span className="text-xs">🟡</span>
+            <div className="absolute bottom-2 right-2 w-[38%] h-[38%] rounded-2xl bg-gradient-to-tl from-amber-950 via-amber-900/80 to-slate-950 border-2 border-amber-500/80 p-2 sm:p-2.5 flex flex-col justify-between shadow-[inset_0_2px_10px_rgba(245,158,11,0.3)]">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs font-black text-amber-200">
+                <span className="flex items-center gap-1">👑 قلعه زال زر</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.9)]" />
               </div>
-              <div className="grid grid-cols-2 gap-2 p-1">
+              <div className="grid grid-cols-2 gap-2 p-1 place-items-center">
                 {pieces.filter((p) => p.color === 'yellow' && p.state === 'base').map((p) => {
                   const canMove = moveablePieces.some((m) => m.color === 'yellow' && m.id === p.id);
                   return (
                     <button
                       key={p.id}
                       onClick={() => canMove && activeTurn === 'yellow' && movePiece(p, diceVal)}
-                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-amber-500 border-2 border-amber-200 shadow-md flex items-center justify-center text-xs font-black text-slate-950 transition-all cursor-pointer ${
-                        canMove && activeTurn === 'yellow' ? 'ring-4 ring-yellow-400 scale-110 animate-bounce' : 'opacity-90'
+                      className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-yellow-300 via-amber-500 to-amber-800 border-2 border-amber-100 shadow-[0_4px_10px_rgba(0,0,0,0.8),inset_0_2px_4px_rgba(255,255,255,0.6)] flex items-center justify-center text-sm font-black text-slate-950 transition-all cursor-pointer ${
+                        canMove && activeTurn === 'yellow' ? 'ring-4 ring-yellow-400 scale-110 animate-bounce' : 'hover:scale-105'
                       }`}
                     >
-                      ♟️
+                      <span className="filter drop-shadow">♟️</span>
                     </button>
                   );
                 })}
               </div>
             </div>
-
-            {/* Center Palace / Goal Area */}
-            <div className="absolute top-[40%] left-[40%] w-[20%] h-[20%] rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 border-2 border-amber-300 shadow-2xl flex flex-col items-center justify-center text-center p-1 z-10">
-              <Crown className="w-5 h-5 text-slate-950 animate-bounce" />
+            {/* Center Palace / Goal Area with Persian Sun and Gold Bevels */}
+            <div className="absolute top-[40%] left-[40%] w-[20%] h-[20%] rounded-2xl bg-gradient-to-br from-amber-300 via-amber-500 to-yellow-600 border-2 border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.6)] flex flex-col items-center justify-center text-center p-1 z-10 ring-2 ring-amber-400">
+              <Crown className="w-5 h-5 text-slate-950 animate-bounce filter drop-shadow" />
               <span className="text-[10px] font-black text-slate-950 leading-tight">کاخ پیروزی</span>
             </div>
 
-            {/* Render 40 Track Tiles */}
+            {/* Render 40 Track Tiles with Glowing Finish */}
             {TRACK_COORDS.map((coord, idx) => {
               // Find pieces on this global track tile
               const piecesOnTile = pieces.filter((p) => {
@@ -518,16 +517,16 @@ export const LudoGame: React.FC<LudoGameProps> = ({
                     width: `${(1 / 15) * 100}%`,
                     height: `${(1 / 15) * 100}%`,
                   }}
-                  className={`absolute rounded-md border flex items-center justify-center transition-colors ${
+                  className={`absolute rounded-lg border flex items-center justify-center transition-all ${
                     isRedStart
-                      ? 'bg-rose-500/40 border-rose-400 font-bold text-rose-300'
+                      ? 'bg-rose-500/50 border-rose-400 font-black text-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.6)]'
                       : isGreenStart
-                      ? 'bg-emerald-500/40 border-emerald-400 font-bold text-emerald-300'
+                      ? 'bg-emerald-500/50 border-emerald-400 font-black text-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.6)]'
                       : isYellowStart
-                      ? 'bg-amber-500/40 border-amber-400 font-bold text-amber-300'
+                      ? 'bg-amber-500/50 border-amber-400 font-black text-amber-300 shadow-[0_0_8px_rgba(245,158,11,0.6)]'
                       : isBlueStart
-                      ? 'bg-cyan-500/40 border-cyan-400 font-bold text-cyan-300'
-                      : 'bg-slate-900/90 border-slate-700/80 hover:border-amber-400/40'
+                      ? 'bg-cyan-500/50 border-cyan-400 font-black text-cyan-300 shadow-[0_0_8px_rgba(6,182,212,0.6)]'
+                      : 'bg-gradient-to-b from-slate-900 to-slate-950 border-amber-900/40 hover:border-amber-400/60 shadow-inner'
                   }`}
                 >
                   {piecesOnTile.map((p) => {
@@ -536,10 +535,10 @@ export const LudoGame: React.FC<LudoGameProps> = ({
                       <button
                         key={`${p.color}-${p.id}`}
                         onClick={() => canMove && activeTurn === p.color && movePiece(p, diceVal)}
-                        className={`w-[85%] h-[85%] rounded-full shadow-lg flex items-center justify-center text-[10px] font-black border transition-all cursor-pointer ${
+                        className={`w-[88%] h-[88%] rounded-full shadow-[0_3px_6px_rgba(0,0,0,0.9)] flex items-center justify-center text-[10px] font-black border transition-all cursor-pointer ${
                           PLAYER_NAMES[p.color].bgClass
                         } ${PLAYER_NAMES[p.color].borderClass} ${
-                          canMove && activeTurn === p.color ? 'ring-2 ring-yellow-300 scale-125 animate-pulse z-20' : 'text-white'
+                          canMove && activeTurn === p.color ? 'ring-2 ring-yellow-300 scale-125 animate-pulse z-20 shadow-[0_0_12px_rgba(245,158,11,0.9)]' : 'text-white'
                         }`}
                       >
                         ♟
