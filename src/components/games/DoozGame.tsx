@@ -303,7 +303,7 @@ export const DoozGame: React.FC<DoozGameProps> = ({
       </div>
 
       {/* Board Stage with Ancient Mythical Obsidian & Molten Gold Theme */}
-      <div className="relative aspect-square w-full max-w-[380px] mx-auto bg-gradient-to-b from-[#221810] via-[#120d09] to-[#080503] p-3.5 sm:p-4 rounded-3xl border-4 border-amber-500/70 shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(245,158,11,0.25)] ring-1 ring-amber-400/50">
+      <div className="relative aspect-square w-full max-w-[380px] mx-auto bg-gradient-to-b from-[#221810] via-[#120d09] to-[#080503] p-3.5 sm:p-4 rounded-3xl border-4 border-amber-500/70 shadow-2xl ring-1 ring-amber-400/50 gpu-layer">
         <div
           className={`grid gap-2 w-full h-full bg-[#0a0705] p-2.5 rounded-2xl border-2 border-amber-900/60 shadow-inner ${
             gridSize === 3 ? 'grid-cols-3 grid-rows-3' : 'grid-cols-5 grid-rows-5 gap-1.5'

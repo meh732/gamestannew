@@ -210,7 +210,7 @@ export const SudokuGame: React.FC<SudokuGameProps> = ({ onBack, onWinReward }) =
       </div>
 
       {/* 9x9 Grid with Persian Sapphire & Gold Border Theme */}
-      <div className="relative aspect-square w-full max-w-[440px] mx-auto bg-gradient-to-b from-[#0e1d2c] via-[#09121d] to-[#04080e] p-3 sm:p-4 rounded-3xl border-4 border-sky-500/70 shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(14,165,233,0.25)] ring-1 ring-sky-400/50">
+      <div className="relative aspect-square w-full max-w-[440px] mx-auto bg-gradient-to-b from-[#0e1d2c] via-[#09121d] to-[#04080e] p-3 sm:p-4 rounded-3xl border-4 border-sky-500/70 shadow-2xl ring-1 ring-sky-400/50 gpu-layer">
         <div className="grid grid-cols-9 grid-rows-9 gap-0.5 w-full h-full bg-[#060c14] rounded-2xl overflow-hidden border-2 border-sky-600/70 shadow-inner">
           {currentGrid.map((row, r) =>
             row.map((val, c) => {

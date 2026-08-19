@@ -36,12 +36,9 @@ export const SleekMobileNav: React.FC<SleekMobileNavProps> = ({
   const isProfile = activeTab === 'profile' || activeTab === 'wallet';
 
   return (
-    <div className="fixed bottom-3 left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:w-[440px] z-40 pointer-events-auto font-['Vazirmatn'] select-none">
-      {/* Floating Island Glow Backdrop */}
-      <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-yellow-500/15 to-amber-500/10 rounded-3xl blur-md -z-10 pointer-events-none" />
-
-      {/* Main Glassmorphic Capsule Dock */}
-      <nav className="relative w-full bg-slate-950/85 backdrop-blur-2xl border border-amber-500/35 rounded-3xl px-2 py-2 shadow-[0_20px_45px_rgba(0,0,0,0.9),0_0_25px_rgba(245,158,11,0.18)] flex items-center justify-between">
+    <div className="fixed bottom-3 left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:w-[440px] z-40 pointer-events-auto font-['Vazirmatn'] select-none gpu-layer">
+      {/* Main Solid Dock (Zero GPU lag on older phones) */}
+      <nav className="relative w-full bg-[#0b0f19] border-2 border-amber-500/40 rounded-3xl px-2 py-2 shadow-2xl flex items-center justify-between">
         
         {/* 1. تالار بازی‌ها */}
         <button

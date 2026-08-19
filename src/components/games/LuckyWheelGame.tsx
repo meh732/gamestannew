@@ -1,6 +1,7 @@
 import React, { useState, useId } from 'react';
 import { WheelSegment } from '../../types';
 import { sounds } from '../../utils/audio';
+import { gfx } from '../../engine/GraphicsEngine';
 import confetti from 'canvas-confetti';
 import { Trophy, Gift, RotateCw } from 'lucide-react';
 
@@ -54,6 +55,7 @@ export const LuckyWheelGame: React.FC<LuckyWheelGameProps> = ({ onBack, onPrizeW
       setWinningPrize(targetSegment);
       sounds.playWin();
       confetti({ particleCount: 120, spread: 80 });
+      gfx.spawnCoinShower(50);
 
       if (targetSegment.type === 'coins') {
         onPrizeWon?.(targetSegment.amount, 0);

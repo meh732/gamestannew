@@ -20,6 +20,7 @@ import { LeaguesView } from './components/views/LeaguesView';
 import { LawRulesView } from './components/views/LawRulesView';
 import { ChatSupportView } from './components/views/ChatSupportView';
 import { ProfileWalletView } from './components/views/ProfileWalletView';
+import { VisualFXCanvas } from './engine/VisualFXCanvas';
 import { useBackGesture } from './hooks/useBackGesture';
 
 const INITIAL_PROFILE: UserProfile = {
@@ -321,6 +322,9 @@ export default function App() {
           {renderTabContent()}
         </AndroidAppView>
       )}
+
+      {/* Global Hardware-Accelerated Particle & Visual FX Canvas */}
+      <VisualFXCanvas />
 
       {/* Auth & Profile Modal */}
       <AuthModal

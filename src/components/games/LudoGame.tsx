@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GameMode } from '../../types';
 import { sounds } from '../../utils/audio';
 import { GameModeBanner } from '../common/GameModeBanner';
+import { ThreeDice3D } from '../../engine/ThreeDice3D';
+import { gfx } from '../../engine/GraphicsEngine';
 import confetti from 'canvas-confetti';
 import {
   RotateCcw,
@@ -326,6 +328,7 @@ export const LudoGame: React.FC<LudoGameProps> = ({
         setWinner(piece.color);
         sounds.playWin();
         confetti({ particleCount: 150, spread: 90 });
+        gfx.spawnCoinShower(50);
         if (piece.color === 'red') {
           onWinReward?.(gameMode === 'league' ? 400 : 200);
         }
@@ -336,6 +339,7 @@ export const LudoGame: React.FC<LudoGameProps> = ({
       // If rolled 6 or captured piece: Bonus Roll!
       if (rolled === 6 || capturedOpponent) {
         setHasRolled(false);
+        gfx.spawnSparks(window.innerWidth / 2, window.innerHeight / 2, 35, '#f59e0b');
         setLogMessage(`جایزه پرتاب مجدد برای ${PLAYER_NAMES[piece.color].name}! 🎲`);
         if (gameMode === 'ai' && piece.color !== 'red') {
           setTimeout(() => rollDice(), 800);
@@ -387,7 +391,7 @@ export const LudoGame: React.FC<LudoGameProps> = ({
       <div className="w-full flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 sm:gap-6">
         
         {/* The Authentic 15x15 Classic Cross Mench Board with Persian Inlaid Wood Theme */}
-        <div className="relative w-[340px] h-[340px] sm:w-[460px] sm:h-[460px] md:w-[500px] md:h-[500px] bg-gradient-to-b from-[#241a12] via-[#150f0a] to-[#0d0906] border-4 border-amber-500/80 rounded-3xl shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(245,158,11,0.25)] p-2.5 sm:p-3 relative overflow-hidden ring-1 ring-amber-400/60">
+        <div className="relative w-[340px] h-[340px] sm:w-[460px] sm:h-[460px] md:w-[500px] md:h-[500px] bg-gradient-to-b from-[#241a12] via-[#150f0a] to-[#0d0906] border-4 border-amber-500/80 rounded-3xl shadow-2xl p-2.5 sm:p-3 relative overflow-hidden ring-1 ring-amber-400/60 gpu-layer">
           
           {/* Inner Board 15x15 Matrix */}
           <div className="w-full h-full relative grid grid-cols-15 grid-rows-15 gap-0.5 rounded-2xl bg-[#090705] p-1.5 border-2 border-amber-900/60 shadow-inner">
@@ -488,10 +492,34 @@ export const LudoGame: React.FC<LudoGameProps> = ({
                 })}
               </div>
             </div>
-            {/* Center Palace / Goal Area with Persian Sun and Gold Bevels */}
-            <div className="absolute top-[40%] left-[40%] w-[20%] h-[20%] rounded-2xl bg-gradient-to-br from-amber-300 via-amber-500 to-yellow-600 border-2 border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.6)] flex flex-col items-center justify-center text-center p-1 z-10 ring-2 ring-amber-400">
-              <Crown className="w-5 h-5 text-slate-950 animate-bounce filter drop-shadow" />
-              <span className="text-[10px] font-black text-slate-950 leading-tight">کاخ پیروزی</span>
+            {/* Center Palace / Goal Area with Persian Sun & Interactive Dice in Center */}
+            <div
+              onClick={() => {
+                if (!hasRolled && !isRolling && !winner && !(gameMode === 'ai' && activeTurn !== 'red')) {
+                  rollDice();
+                }
+              }}
+              className={`absolute top-[38%] left-[38%] w-[24%] h-[24%] rounded-2xl border-2 flex flex-col items-center justify-center text-center p-1 z-20 transition-all select-none cursor-pointer ${
+                !hasRolled && !isRolling && !winner && !(gameMode === 'ai' && activeTurn !== 'red')
+                  ? 'bg-gradient-to-br from-amber-400 via-yellow-400 to-amber-500 border-yellow-200 shadow-[0_0_25px_rgba(245,158,11,0.9)] ring-4 ring-yellow-400 animate-pulse scale-105'
+                  : 'bg-gradient-to-br from-slate-900 via-amber-950/80 to-slate-950 border-amber-500/50 shadow-md'
+              }`}
+            >
+              {isRolling ? (
+                <div className="animate-spin text-2xl sm:text-3xl text-amber-300">🎲</div>
+              ) : hasRolled ? (
+                <div className="flex flex-col items-center">
+                  <span className="text-xl sm:text-2xl font-black text-white font-mono drop-shadow">
+                    {diceVal === 1 ? '⚀' : diceVal === 2 ? '⚁' : diceVal === 3 ? '⚂' : diceVal === 4 ? '⚃' : diceVal === 5 ? '⚄' : '⚅'}
+                  </span>
+                  <span className="text-[10px] font-black text-amber-300 font-mono">تاس: {diceVal}</span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <span className="text-xl sm:text-2xl animate-bounce">🎲</span>
+                  <span className="text-[9px] font-black text-slate-950 bg-amber-200 px-1.5 py-0.2 rounded-md">پرتاب تاس</span>
+                </div>
+              )}
             </div>
 
             {/* Render 40 Track Tiles with Glowing Finish */}
@@ -630,14 +658,18 @@ export const LudoGame: React.FC<LudoGameProps> = ({
             </div>
           </div>
 
-          {/* 3D Dice Action Pod */}
-          <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-amber-500/40 p-5 rounded-3xl flex flex-col items-center gap-4 shadow-xl text-center">
-            <div className="text-xs text-slate-400 font-bold">تاس شانس اساطیری</div>
+          {/* 3D WebGL Dice Action Pod */}
+          <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-amber-500/40 p-4 rounded-3xl flex flex-col items-center gap-3 shadow-xl text-center">
+            <div className="text-xs text-slate-400 font-bold">تاس سه‌بعدی اساطیری (WebGL 3D)</div>
 
-            <div className={`w-24 h-24 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-950 border-2 border-amber-400 flex items-center justify-center shadow-2xl shadow-amber-500/20 transition-transform ${
-              isRolling ? 'rotate-180 scale-110 animate-spin' : 'scale-100'
-            }`}>
-              {renderDiceIcon(diceVal)}
+            <div className="flex items-center justify-center p-1">
+              <ThreeDice3D
+                size={105}
+                value={diceVal}
+                isRolling={isRolling}
+                onClick={rollDice}
+                className="hover:scale-105 transition-transform"
+              />
             </div>
 
             <div className="text-sm font-black text-amber-300">

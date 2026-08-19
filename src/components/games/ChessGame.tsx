@@ -335,7 +335,7 @@ export const ChessGame: React.FC<ChessGameProps> = ({
           </div>
 
           {/* 8x8 Chessboard Container with Luxury Persian Walnut & Gold Border */}
-          <div className="relative aspect-square w-full max-w-[350px] sm:max-w-[460px] mx-auto bg-gradient-to-b from-[#241a14] via-[#140e0a] to-[#0a0705] p-2.5 sm:p-3.5 rounded-3xl border-4 border-amber-500/70 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(245,158,11,0.25)] select-none overflow-hidden ring-1 ring-amber-400/50">
+          <div className="relative aspect-square w-full max-w-[350px] sm:max-w-[460px] mx-auto bg-gradient-to-b from-[#241a14] via-[#140e0a] to-[#0a0705] p-2.5 sm:p-3.5 rounded-3xl border-4 border-amber-500/70 shadow-2xl select-none overflow-hidden ring-1 ring-amber-400/50 gpu-layer">
             {/* Grid */}
             <div className="grid grid-cols-8 grid-rows-8 w-full h-full rounded-2xl overflow-hidden border-2 border-amber-900/60 shadow-inner">
               {Array.from({ length: 8 }).map((_, rowIdx) => {

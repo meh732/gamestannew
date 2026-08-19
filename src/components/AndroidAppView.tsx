@@ -42,7 +42,7 @@ export const AndroidAppView: React.FC<AndroidAppViewProps> = ({
   return (
     <div className="w-full min-h-screen flex flex-col bg-slate-950 font-['Vazirmatn'] text-slate-100 relative overflow-x-hidden">
       {/* Mobile Top App Bar */}
-      <header className="sticky top-0 bg-slate-950/95 border-b border-amber-500/30 px-3 sm:px-4 py-2 flex items-center justify-between z-30 shadow-md backdrop-blur-md">
+      <header className="sticky top-0 bg-[#070a12] border-b border-amber-500/30 px-3 sm:px-4 py-2 flex items-center justify-between z-30 shadow-md">
         {isInsideGame ? (
           <button
             id="android-back-to-home-btn"

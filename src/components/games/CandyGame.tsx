@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useId } from 'react';
 import { sounds } from '../../utils/audio';
+import { gfx } from '../../engine/GraphicsEngine';
 import confetti from 'canvas-confetti';
 import { RotateCcw, Trophy, Flame } from 'lucide-react';
 
@@ -112,6 +113,9 @@ export const CandyGame: React.FC<CandyGameProps> = ({ onBack, onWinReward }) => 
       matched.forEach(({ r, c }) => {
         g[r][c] = '';
       });
+
+      // Spawn real-time gem particle bursts
+      gfx.spawnGemBurst(window.innerWidth / 2, window.innerHeight / 2, '#38bdf8', 25);
 
       // Drop down
       for (let c = 0; c < GRID_SIZE; c++) {

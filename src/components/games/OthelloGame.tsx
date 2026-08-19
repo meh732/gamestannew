@@ -215,7 +215,7 @@ export const OthelloGame: React.FC<OthelloGameProps> = ({
       )}
 
       {/* 8x8 Board Stage with Persian Emerald Velvet & Gold Bevel Theme */}
-      <div className="relative aspect-square w-full max-w-[460px] mx-auto bg-gradient-to-b from-[#0e251b] via-[#081711] to-[#040c09] p-3 sm:p-4 rounded-3xl border-4 border-emerald-500/70 shadow-[0_25px_65px_rgba(0,0,0,0.95),0_0_35px_rgba(16,185,129,0.25)] ring-1 ring-emerald-400/50">
+      <div className="relative aspect-square w-full max-w-[460px] mx-auto bg-gradient-to-b from-[#0e251b] via-[#081711] to-[#040c09] p-3 sm:p-4 rounded-3xl border-4 border-emerald-500/70 shadow-2xl ring-1 ring-emerald-400/50 gpu-layer">
         <div className="grid grid-cols-8 grid-rows-8 gap-1.5 w-full h-full bg-gradient-to-br from-[#103b29] to-[#0a2318] p-2 sm:p-2.5 rounded-2xl border-2 border-emerald-800/80 shadow-inner">
           {board.map((row, r) =>
             row.map((disc, c) => {
