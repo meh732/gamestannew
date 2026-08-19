@@ -2,7 +2,20 @@ import React, { useState, useRef } from 'react';
 import { UserProfile } from '../../types';
 import { sounds } from '../../utils/audio';
 import confetti from 'canvas-confetti';
-import { Trophy, Flame, Shield, Coins, Gem, Gamepad2, Camera, LogIn, Lock } from 'lucide-react';
+import {
+  Trophy,
+  Flame,
+  Shield,
+  Coins,
+  Gem,
+  Gamepad2,
+  Camera,
+  LogIn,
+  Lock,
+  UserPlus,
+  Sparkles,
+  CheckCircle2,
+} from 'lucide-react';
 
 interface ProfileWalletViewProps {
   profile: UserProfile;
@@ -20,11 +33,14 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
   onOpenAuth,
 }) => {
   const [activeTab, setActiveTab] = useState<'profile' | 'wallet'>('profile');
-  const [selectedAvatar, setSelectedAvatar] = useState(profile.avatar);
+  const [selectedAvatar, setSelectedAvatar] = useState(profile.avatar || '👑');
   const [savedAlert, setSavedAlert] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const winRate = profile.totalGames > 0 ? Math.round((profile.wins / profile.totalGames) * 100) : 75;
+  const winRate =
+    profile.totalGames > 0
+      ? Math.round((profile.wins / profile.totalGames) * 100)
+      : 0;
 
   const handleSaveAvatar = (av: string) => {
     setSelectedAvatar(av);
@@ -56,6 +72,75 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
     confetti({ particleCount: 100, spread: 80 });
   };
 
+  // If user is NOT logged in: Show dedicated Clean Authentication Gate
+  if (!profile.isLoggedIn) {
+    return (
+      <div className="w-full max-w-2xl mx-auto p-4 sm:p-6 flex flex-col gap-6 text-slate-100 font-['Vazirmatn'] select-none">
+        {/* Back Button */}
+        {onBack && (
+          <div className="flex items-center justify-between">
+            <button
+              onClick={onBack}
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 transition-colors cursor-pointer"
+            >
+              ← بازگشت به صفحه اصلی
+            </button>
+            <span className="text-xs text-amber-400 font-bold">ورود به حساب کاربری گیمستان</span>
+          </div>
+        )}
+
+        {/* Hero Card for Unregistered Guests */}
+        <div className="bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 border-2 border-amber-500/40 rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center gap-5 shadow-2xl shadow-amber-500/10 relative overflow-hidden">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 flex items-center justify-center text-slate-950 shadow-xl shadow-amber-500/30 p-1">
+            <div className="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center">
+              <Lock className="w-9 h-9 text-amber-400" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 max-w-md">
+            <h2 className="text-2xl font-black bg-gradient-to-l from-amber-200 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
+              ورود و ثبت‌نام در گیمستان
+            </h2>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              برای مشاهده و ویرایش مشخصات پروفایل، تنظیم عکس اختصاصی، رتبه‌بندی ELO و ذخیره جوایز لیگ‌ها، لطفاً وارد حساب خود شوید.
+            </p>
+          </div>
+
+          {/* Key Advantages */}
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5 my-1 text-right">
+            <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl flex items-center gap-2.5 text-xs text-slate-200">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>تنظیم آواتار و آپلود عکس دلخواه</span>
+            </div>
+            <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl flex items-center gap-2.5 text-xs text-slate-200">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>ذخیره دائمی سکه‌ها و الماس‌ها</span>
+            </div>
+            <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl flex items-center gap-2.5 text-xs text-slate-200">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>شرکت در تورنمنت‌ها و جوایز نقدی</span>
+            </div>
+            <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl flex items-center gap-2.5 text-xs text-slate-200">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>ثبت رنک و مدال‌های اساطیری</span>
+            </div>
+          </div>
+
+          {/* Action Login Button */}
+          <button
+            id="gate-open-auth-btn"
+            onClick={onOpenAuth}
+            className="w-full sm:w-80 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/30 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+          >
+            <LogIn className="w-5 h-5 text-slate-950" />
+            <span>ورود / ایجاد حساب کاربری رایگان</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Once user IS LOGGED IN: Show full Profile & Customization Dashboard
   return (
     <div className="w-full max-w-4xl mx-auto p-2 sm:p-5 flex flex-col gap-3 sm:gap-5 text-slate-100 font-['Vazirmatn']">
       {/* Header */}
@@ -69,21 +154,15 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
             />
           ) : (
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-3xl shadow-md shadow-amber-500/20">
-              {profile.avatar}
+              {profile.avatar || '👑'}
             </div>
           )}
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-black text-amber-300">{profile.displayName}</h1>
-              {profile.isLoggedIn ? (
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold">
-                  {profile.authMethod === 'google' ? 'گوگل ✓' : 'موبایل ✓'}
-                </span>
-              ) : (
-                <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full font-bold">
-                  کاربر مهمان
-                </span>
-              )}
+              <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold">
+                {profile.authMethod === 'google' ? 'گوگل ✓' : 'موبایل ✓'}
+              </span>
             </div>
             <p className="text-xs text-slate-400">@{profile.username} • {profile.rankTitle}</p>
           </div>
@@ -96,7 +175,7 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
               className="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span>{profile.isLoggedIn ? 'مدیریت حساب' : 'ورود / ثبت‌نام'}</span>
+              <span>مدیریت حساب</span>
             </button>
           )}
 
@@ -191,76 +270,54 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
             <div className="w-full h-2.5 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
               <div
                 className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full"
-                style={{ width: `${(profile.xp / profile.xpToNext) * 100}%` }}
+                style={{ width: `${(profile.xp / (profile.xpToNext || 100)) * 100}%` }}
               />
             </div>
           </div>
 
-          {/* Avatar Selector & Upload - Only accessible AFTER login */}
-          {profile.isLoggedIn ? (
-            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col gap-3 shadow-md">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-200">تنظیم و ویرایش آواتار کاربری:</span>
-                {savedAlert && <span className="text-xs text-emerald-400 font-bold">آواتار به‌روزرسانی شد! ✓</span>}
-              </div>
-
-              <div className="flex items-center gap-3 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95"
-                >
-                  <Camera className="w-4 h-4" />
-                  <span>آپلود عکس از گالری</span>
-                </button>
-                <span className="text-[11px] text-slate-400">عکس دلخواه شما به عنوان آواتار حساب ذخیره می‌شود.</span>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-              </div>
-
-              <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
-                {AVATARS.map((av) => (
-                  <button
-                    key={av}
-                    id={`avatar-select-${av}`}
-                    onClick={() => handleSaveAvatar(av)}
-                    className={`aspect-square rounded-xl text-2xl flex items-center justify-center border transition-all cursor-pointer ${
-                      selectedAvatar === av && !profile.customAvatarUrl
-                        ? 'bg-amber-500/20 border-amber-400 scale-110 shadow-md shadow-amber-500/20'
-                        : 'bg-slate-800/80 border-slate-700 hover:bg-slate-700'
-                    }`}
-                  >
-                    {av}
-                  </button>
-                ))}
-              </div>
+          {/* Avatar Selector & Custom Upload Menu (Unlocked after login) */}
+          <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col gap-3 shadow-md">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-200">تنظیم و تغییر آواتار کاربری:</span>
+              {savedAlert && <span className="text-xs text-emerald-400 font-bold">آواتار به‌روزرسانی شد! ✓</span>}
             </div>
-          ) : (
-            /* Unauthenticated Login Gate for Profile customization */
-            <div className="bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 border border-amber-500/30 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
-              <div className="flex items-center gap-3 text-center sm:text-right">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
-                  <Lock className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-amber-300">برای شخصی‌سازی عکس و ذخیره پیشرفت وارد شوید</h4>
-                  <p className="text-xs text-slate-400">تنظیم آواتار و ذخیره دائمی سکه‌ها پس از ورود به حساب فعال می‌گردد.</p>
-                </div>
-              </div>
 
+            <div className="flex items-center gap-3 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
               <button
-                onClick={onOpenAuth}
-                className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95"
               >
-                ورود یا ایجاد حساب
+                <Camera className="w-4 h-4" />
+                <span>آپلود عکس اختصاصی از گالری</span>
               </button>
+              <span className="text-[11px] text-slate-400">عکس دلخواه شما روی حساب کاربریتان اعمال می‌شود.</span>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
             </div>
-          )}
+
+            <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+              {AVATARS.map((av) => (
+                <button
+                  key={av}
+                  id={`avatar-select-${av}`}
+                  onClick={() => handleSaveAvatar(av)}
+                  className={`aspect-square rounded-xl text-2xl flex items-center justify-center border transition-all cursor-pointer ${
+                    selectedAvatar === av && !profile.customAvatarUrl
+                      ? 'bg-amber-500/20 border-amber-400 scale-110 shadow-md shadow-amber-500/20'
+                      : 'bg-slate-800/80 border-slate-700 hover:bg-slate-700'
+                  }`}
+                >
+                  {av}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         /* Wallet Shop */

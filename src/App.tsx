@@ -23,22 +23,22 @@ import { ProfileWalletView } from './components/views/ProfileWalletView';
 import { useBackGesture } from './hooks/useBackGesture';
 
 const INITIAL_PROFILE: UserProfile = {
-  username: 'Rostam_Hero',
-  displayName: 'پهلوان گیمستان (رستم)',
-  avatar: '🦁',
+  username: '',
+  displayName: 'کاربر مهمان',
+  avatar: '👤',
   isLoggedIn: false,
   authMethod: 'guest',
-  coins: 2500,
-  gems: 45,
-  level: 12,
-  xp: 1850,
-  xpToNext: 2500,
-  rankTitle: 'پهلوان نامدار شاهنامه و استاد بزرگ',
-  ratingElo: 1980,
-  totalGames: 84,
-  wins: 63,
-  losses: 21,
-  streak: 5,
+  coins: 500,
+  gems: 10,
+  level: 1,
+  xp: 0,
+  xpToNext: 100,
+  rankTitle: 'کاربر تازه‌وارد',
+  ratingElo: 1000,
+  totalGames: 0,
+  wins: 0,
+  losses: 0,
+  streak: 0,
 };
 
 export default function App() {
