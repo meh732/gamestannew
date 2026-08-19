@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { UserProfile } from '../../types';
 import { sounds } from '../../utils/audio';
 import confetti from 'canvas-confetti';
-import { Trophy, Flame, Shield, Coins, Gem, Gamepad2, Check, Upload, Camera, LogIn } from 'lucide-react';
+import { Trophy, Flame, Shield, Coins, Gem, Gamepad2, Camera, LogIn, Lock } from 'lucide-react';
 
 interface ProfileWalletViewProps {
   profile: UserProfile;
@@ -75,9 +75,13 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-black text-amber-300">{profile.displayName}</h1>
-              {profile.isLoggedIn && (
+              {profile.isLoggedIn ? (
                 <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold">
                   {profile.authMethod === 'google' ? 'گوگل ✓' : 'موبایل ✓'}
+                </span>
+              ) : (
+                <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full font-bold">
+                  کاربر مهمان
                 </span>
               )}
             </div>
@@ -89,7 +93,7 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
           {onOpenAuth && (
             <button
               onClick={onOpenAuth}
-              className="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>{profile.isLoggedIn ? 'مدیریت حساب' : 'ورود / ثبت‌نام'}</span>
@@ -100,7 +104,7 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
             <button
               id="profile-back-btn"
               onClick={onBack}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors cursor-pointer"
             >
               بازگشت
             </button>
@@ -192,49 +196,71 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
             </div>
           </div>
 
-          {/* Avatar Selector & Upload */}
-          <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col gap-3 shadow-md">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-200">انتخاب یا آپلود عکس کاربری:</span>
-              {savedAlert && <span className="text-xs text-emerald-400 font-bold">آواتار به‌روزرسانی شد! ✓</span>}
-            </div>
+          {/* Avatar Selector & Upload - Only accessible AFTER login */}
+          {profile.isLoggedIn ? (
+            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col gap-3 shadow-md">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-200">تنظیم و ویرایش آواتار کاربری:</span>
+                {savedAlert && <span className="text-xs text-emerald-400 font-bold">آواتار به‌روزرسانی شد! ✓</span>}
+              </div>
 
-            <div className="flex items-center gap-3 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md cursor-pointer transition-all"
-              >
-                <Camera className="w-4 h-4" />
-                <span>آپلود عکس از گالری</span>
-              </button>
-              <span className="text-[11px] text-slate-400">عکس دلخواه شما به جای ایموجی قرار می‌گیرد.</span>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-            </div>
-
-            <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
-              {AVATARS.map((av) => (
+              <div className="flex items-center gap-3 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
                 <button
-                  key={av}
-                  id={`avatar-select-${av}`}
-                  onClick={() => handleSaveAvatar(av)}
-                  className={`aspect-square rounded-xl text-2xl flex items-center justify-center border transition-all cursor-pointer ${
-                    selectedAvatar === av && !profile.customAvatarUrl
-                      ? 'bg-amber-500/20 border-amber-400 scale-110 shadow-md shadow-amber-500/20'
-                      : 'bg-slate-800/80 border-slate-700 hover:bg-slate-700'
-                  }`}
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95"
                 >
-                  {av}
+                  <Camera className="w-4 h-4" />
+                  <span>آپلود عکس از گالری</span>
                 </button>
-              ))}
+                <span className="text-[11px] text-slate-400">عکس دلخواه شما به عنوان آواتار حساب ذخیره می‌شود.</span>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+              </div>
+
+              <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                {AVATARS.map((av) => (
+                  <button
+                    key={av}
+                    id={`avatar-select-${av}`}
+                    onClick={() => handleSaveAvatar(av)}
+                    className={`aspect-square rounded-xl text-2xl flex items-center justify-center border transition-all cursor-pointer ${
+                      selectedAvatar === av && !profile.customAvatarUrl
+                        ? 'bg-amber-500/20 border-amber-400 scale-110 shadow-md shadow-amber-500/20'
+                        : 'bg-slate-800/80 border-slate-700 hover:bg-slate-700'
+                    }`}
+                  >
+                    {av}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            /* Unauthenticated Login Gate for Profile customization */
+            <div className="bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 border border-amber-500/30 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
+              <div className="flex items-center gap-3 text-center sm:text-right">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+                  <Lock className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-amber-300">برای شخصی‌سازی عکس و ذخیره پیشرفت وارد شوید</h4>
+                  <p className="text-xs text-slate-400">تنظیم آواتار و ذخیره دائمی سکه‌ها پس از ورود به حساب فعال می‌گردد.</p>
+                </div>
+              </div>
+
+              <button
+                onClick={onOpenAuth}
+                className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+              >
+                ورود یا ایجاد حساب
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         /* Wallet Shop */
@@ -266,59 +292,52 @@ export const ProfileWalletView: React.FC<ProfileWalletViewProps> = ({
             </div>
           </div>
 
-          {/* Recharge Packages Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {/* Package 1 */}
-            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between gap-4 shadow-md hover:border-amber-500/40 transition-all">
-              <div>
-                <div className="text-2xl mb-1">🪙</div>
-                <h2 className="text-sm font-bold text-slate-100">بسته برنزی سکه</h2>
-                <p className="text-xs text-slate-400">۱,۰۰۰ سکه طلا + ۱۰ الماس هدیه</p>
-              </div>
-              <button
-                id="buy-pkg-1"
-                onClick={() => handleBuyPackage(1000, 10)}
-                className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition-all cursor-pointer"
-              >
-                دریافت رایگان تست 🎁
-              </button>
-            </div>
+          {/* Shop Packages */}
+          <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl shadow-md flex flex-col gap-3">
+            <h3 className="text-sm font-bold text-amber-300">بسته‌های شارژ فوری سکه و الماس:</h3>
 
-            {/* Package 2 */}
-            <div className="bg-slate-900/90 border border-amber-500/50 p-4 rounded-2xl flex flex-col justify-between gap-4 shadow-lg ring-1 ring-amber-400/30">
-              <div>
-                <div className="flex items-center justify-between">
-                  <div className="text-2xl mb-1">💎</div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950">
-                    محبوب‌ترین
-                  </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="bg-slate-950 border border-slate-800 hover:border-amber-500/40 p-4 rounded-2xl flex flex-col justify-between gap-3 transition-colors">
+                <div>
+                  <div className="text-xs font-bold text-slate-200">بسته برنزی</div>
+                  <div className="text-base font-black text-amber-400 font-mono mt-1">۱,۰۰۰ سکه + ۱۰ الماس</div>
                 </div>
-                <h2 className="text-sm font-bold text-amber-300">بسته طلایی ویژه</h2>
-                <p className="text-xs text-slate-400">۵,۰۰۰ سکه طلا + ۶۰ الماس هدیه</p>
+                <button
+                  onClick={() => handleBuyPackage(1000, 10)}
+                  className="w-full py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl transition-all cursor-pointer"
+                >
+                  دریافت بسته
+                </button>
               </div>
-              <button
-                id="buy-pkg-2"
-                onClick={() => handleBuyPackage(5000, 60)}
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md transition-all cursor-pointer"
-              >
-                دریافت رایگان تست 🎁
-              </button>
-            </div>
 
-            {/* Package 3 */}
-            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between gap-4 shadow-md hover:border-cyan-500/40 transition-all">
-              <div>
-                <div className="text-2xl mb-1">👑</div>
-                <h2 className="text-sm font-bold text-slate-100">بسته پادشاهی VIP</h2>
-                <p className="text-xs text-slate-400">۲۰,۰۰۰ سکه طلا + ۳۰۰ الماس + تیک VIP</p>
+              <div className="bg-slate-950 border border-amber-500/40 p-4 rounded-2xl flex flex-col justify-between gap-3 relative overflow-hidden">
+                <span className="absolute top-0 right-0 bg-amber-500 text-slate-950 text-[9px] font-bold px-2 py-0.5 rounded-bl-lg">
+                  پرفروش
+                </span>
+                <div>
+                  <div className="text-xs font-bold text-amber-300">بسته نقره‌ای</div>
+                  <div className="text-base font-black text-amber-400 font-mono mt-1">۵,۰۰۰ سکه + ۶۰ الماس</div>
+                </div>
+                <button
+                  onClick={() => handleBuyPackage(5000, 60)}
+                  className="w-full py-2 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer"
+                >
+                  دریافت بسته
+                </button>
               </div>
-              <button
-                id="buy-pkg-3"
-                onClick={() => handleBuyPackage(20000, 300)}
-                className="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md transition-all cursor-pointer"
-              >
-                دریافت رایگان تست 🎁
-              </button>
+
+              <div className="bg-slate-950 border border-cyan-500/40 p-4 rounded-2xl flex flex-col justify-between gap-3">
+                <div>
+                  <div className="text-xs font-bold text-cyan-300">بسته طلایی شاهنامه</div>
+                  <div className="text-base font-black text-cyan-400 font-mono mt-1">۲۰,۰۰۰ سکه + ۳۰۰ الماس</div>
+                </div>
+                <button
+                  onClick={() => handleBuyPackage(20000, 300)}
+                  className="w-full py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer"
+                >
+                  دریافت بسته
+                </button>
+              </div>
             </div>
           </div>
         </div>

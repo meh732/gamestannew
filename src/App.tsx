@@ -20,6 +20,7 @@ import { LeaguesView } from './components/views/LeaguesView';
 import { LawRulesView } from './components/views/LawRulesView';
 import { ChatSupportView } from './components/views/ChatSupportView';
 import { ProfileWalletView } from './components/views/ProfileWalletView';
+import { useBackGesture } from './hooks/useBackGesture';
 
 const INITIAL_PROFILE: UserProfile = {
   username: 'Rostam_Hero',
@@ -112,6 +113,78 @@ export default function App() {
     setSelectedGameId(null);
     setActiveTab('home');
   };
+
+  // Universal Back Handler (Modals -> Game -> Subtab -> Home)
+  const handleUniversalBack = () => {
+    if (isAuthModalOpen) {
+      setIsAuthModalOpen(false);
+      return;
+    }
+    if (isPwaModalOpen) {
+      setIsPwaModalOpen(false);
+      return;
+    }
+    if (selectedGameId !== null || activeTab === 'game_view') {
+      setSelectedGameId(null);
+      setActiveTab('home');
+      return;
+    }
+    if (activeTab !== 'home') {
+      setActiveTab('home');
+      return;
+    }
+  };
+
+  // Sync with Browser History API for native mobile back buttons & swipe gestures
+  useEffect(() => {
+    const currentState = {
+      tab: activeTab,
+      gameId: selectedGameId,
+      auth: isAuthModalOpen,
+      pwa: isPwaModalOpen,
+    };
+    window.history.pushState(currentState, '');
+  }, [activeTab, selectedGameId, isAuthModalOpen, isPwaModalOpen]);
+
+  // Listen to popstate (Hardware / Browser back button or Swipe Back)
+  useEffect(() => {
+    const handlePopState = () => {
+      if (isAuthModalOpen) {
+        setIsAuthModalOpen(false);
+        return;
+      }
+      if (isPwaModalOpen) {
+        setIsPwaModalOpen(false);
+        return;
+      }
+      if (selectedGameId !== null) {
+        setSelectedGameId(null);
+        setActiveTab('home');
+        return;
+      }
+      if (activeTab !== 'home') {
+        setActiveTab('home');
+        return;
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [activeTab, selectedGameId, isAuthModalOpen, isPwaModalOpen]);
+
+  // Edge Swipe Gestures Hook (Active when not in home screen or modal is open)
+  const isBackGestureActive =
+    activeTab !== 'home' ||
+    selectedGameId !== null ||
+    isAuthModalOpen ||
+    isPwaModalOpen;
+
+  useBackGesture({
+    enabled: isBackGestureActive,
+    onBack: handleUniversalBack,
+    edgeThreshold: 55,
+    swipeDistance: 65,
+  });
 
   // Render current active game component
   const renderGame = () => {

@@ -1,38 +1,30 @@
 import React, { useState, useRef } from 'react';
-import { GameId, GameInfo, GameMode } from '../types';
+import { GameId, GameMode } from '../types';
 import { GAMES_LIST } from '../data/gamesList';
 import { GameCard } from './common/GameCard';
 import { sounds } from '../utils/audio';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface MythologicalRoomCarouselProps {
   onStartGame: (gameId: GameId, mode: GameMode) => void;
-  initialGameId?: GameId | null;
-  fullScreen?: boolean;
 }
 
 export const MythologicalRoomCarousel: React.FC<MythologicalRoomCarouselProps> = ({
   onStartGame,
-  initialGameId,
-  fullScreen = true,
 }) => {
-  const initialIndex = initialGameId
-    ? Math.max(0, GAMES_LIST.findIndex((g) => g.id === initialGameId))
-    : 0;
-
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const startXRef = useRef<number | null>(null);
 
-  const activeGame = GAMES_LIST[currentIndex] || GAMES_LIST[0];
+  const activeGame = GAMES_LIST[currentIndex];
 
   const handleNextRoom = () => {
     sounds.playMove();
-    setCurrentIndex((prev) => (prev < GAMES_LIST.length - 1 ? prev + 1 : 0));
+    setCurrentIndex((prev) => (prev + 1) % GAMES_LIST.length);
   };
 
   const handlePrevRoom = () => {
     sounds.playMove();
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : GAMES_LIST.length - 1));
+    setCurrentIndex((prev) => (prev - 1 + GAMES_LIST.length) % GAMES_LIST.length);
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -41,9 +33,9 @@ export const MythologicalRoomCarousel: React.FC<MythologicalRoomCarouselProps> =
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (startXRef.current === null) return;
-    const diff = e.changedTouches[0].clientX - startXRef.current;
-    if (Math.abs(diff) > 35) {
-      if (diff > 0) {
+    const diffX = startXRef.current - e.changedTouches[0].clientX;
+    if (Math.abs(diffX) > 40) {
+      if (diffX > 0) {
         // Swiped right (in RTL: Next)
         handleNextRoom();
       } else {
@@ -56,26 +48,18 @@ export const MythologicalRoomCarousel: React.FC<MythologicalRoomCarouselProps> =
 
   return (
     <div
-      className="relative w-full flex flex-col items-center justify-between select-none font-['Vazirmatn'] text-slate-100 overflow-hidden py-3"
+      className="relative w-full flex flex-col items-center justify-between select-none font-['Vazirmatn'] text-slate-100 overflow-hidden py-2"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Dynamic Cinematic Epic Room Backdrop Scene behind the cards */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden transition-all duration-700">
-        {activeGame.heroImage && (
-          <img
-            src={activeGame.heroImage}
-            alt={activeGame.title}
-            className="w-full h-full object-cover object-center filter blur-xl scale-125 opacity-35 transition-all duration-1000"
-            referrerPolicy="no-referrer"
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#070a12] via-[#070a12]/50 to-[#070a12]/80" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.15)_0,transparent_70%)]" />
+      {/* Lightweight Ambient Backdrop Glow */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#070a12] via-[#070a12]/70 to-[#070a12]/90" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.08)_0,transparent_70%)]" />
       </div>
 
       {/* Room Title Header */}
-      <div className="relative z-20 flex flex-col items-center gap-1 mb-2 text-center">
+      <div className="relative z-20 flex flex-col items-center gap-1 mb-1 text-center">
         <span className="text-[10px] font-black tracking-widest text-amber-400 uppercase bg-amber-500/10 border border-amber-500/30 px-3 py-0.5 rounded-full shadow-md">
           {activeGame.roomTitle}
         </span>
@@ -84,8 +68,8 @@ export const MythologicalRoomCarousel: React.FC<MythologicalRoomCarouselProps> =
         </h2>
       </div>
 
-      {/* 3D CoverFlow Stage Container */}
-      <div className="relative w-full h-[530px] sm:h-[590px] perspective-1200 flex items-center justify-center overflow-x-hidden my-1 z-20">
+      {/* CoverFlow Stage Container */}
+      <div className="relative w-full h-[520px] sm:h-[570px] flex items-center justify-center overflow-x-hidden my-1 z-20">
         {GAMES_LIST.map((game, idx) => {
           let position: 'center' | 'left' | 'right' | 'hidden' = 'hidden';
 
@@ -138,10 +122,10 @@ export const MythologicalRoomCarousel: React.FC<MythologicalRoomCarouselProps> =
                 sounds.playMove();
                 setCurrentIndex(idx);
               }}
-              aria-label={`رفتن به اتاق ${idx + 1}`}
+              aria-label={`رفتن به بازی ${idx + 1}`}
               className={`h-2 rounded-full transition-all cursor-pointer ${
-                currentIndex === idx
-                  ? 'w-6 bg-amber-400 shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
+                idx === currentIndex
+                  ? 'w-6 bg-gradient-to-r from-amber-400 to-yellow-500 shadow-md shadow-amber-500/50'
                   : 'w-2 bg-slate-700 hover:bg-slate-500'
               }`}
             />

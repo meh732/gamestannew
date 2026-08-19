@@ -33,16 +33,15 @@ export const GameCard: React.FC<GameCardProps> = ({
   let opacityClass = 'opacity-100';
 
   if (isCenter) {
-    transformClass = 'translate-x-0 translate-z-0 scale-100 rotate-y-0 shadow-[0_30px_70px_rgba(0,0,0,0.95)]';
+    transformClass = 'translate-x-0 scale-100 shadow-[0_20px_50px_rgba(0,0,0,0.9)]';
     zIndex = 30;
     opacityClass = 'opacity-100';
   } else if (isRight) {
-    // In RTL: Right is Next or Previous
-    transformClass = 'translate-x-[42%] sm:translate-x-[55%] -translate-z-40 scale-[0.84] -rotate-y-[28deg] shadow-[0_15px_40px_rgba(0,0,0,0.7)]';
+    transformClass = 'translate-x-[45%] sm:translate-x-[55%] scale-[0.85] shadow-lg';
     zIndex = 20;
     opacityClass = 'opacity-40 hover:opacity-75 cursor-pointer';
   } else if (isLeft) {
-    transformClass = '-translate-x-[42%] sm:-translate-x-[55%] -translate-z-40 scale-[0.84] rotate-y-[28deg] shadow-[0_15px_40px_rgba(0,0,0,0.7)]';
+    transformClass = '-translate-x-[45%] sm:-translate-x-[55%] scale-[0.85] shadow-lg';
     zIndex = 20;
     opacityClass = 'opacity-40 hover:opacity-75 cursor-pointer';
   } else {
@@ -54,28 +53,33 @@ export const GameCard: React.FC<GameCardProps> = ({
   return (
     <div
       onClick={!isCenter ? onSelectCard : undefined}
-      className={`absolute inset-0 w-full max-w-[420px] mx-auto rounded-3xl overflow-hidden border-2 transition-all duration-500 ease-out select-none preserve-3d flex flex-col justify-between ${
+      className={`absolute inset-0 w-full max-w-[420px] mx-auto rounded-3xl overflow-hidden border-2 transition-all duration-300 ease-out select-none flex flex-col justify-between will-change-transform ${
         isCenter ? 'border-amber-400/80 ring-2 ring-amber-500/30' : 'border-amber-500/20'
       } ${transformClass} ${opacityClass}`}
       style={{ zIndex }}
     >
-      {/* Photorealistic Cinematic Game Cover Image Background */}
-      <div className="absolute inset-0 bg-slate-950 overflow-hidden">
+      {/* Self-Contained Gradient Background with Mythological Motif */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${game.bgGradient || 'from-slate-900 via-amber-950/40 to-slate-950'} overflow-hidden`}>
         {game.heroImage && (
           <img
             src={game.heroImage}
             alt={game.title}
-            className="w-full h-full object-cover object-center scale-105 filter brightness-[0.8] contrast-[1.1] transition-transform duration-700"
+            onError={(e) => {
+              // Graceful fallback to rich local CSS gradients if external image fails
+              e.currentTarget.style.display = 'none';
+            }}
+            className="w-full h-full object-cover object-center scale-105 filter brightness-[0.75] contrast-[1.1] transition-transform duration-500"
             referrerPolicy="no-referrer"
+            loading="lazy"
           />
         )}
         {/* Soft Vignette and Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-transparent" />
       </div>
 
       {/* Top Header: Palace Badge & Hero Meta */}
-      <div className="relative z-10 p-3 sm:p-4 flex items-center justify-between border-b border-amber-500/20 bg-slate-950/75 backdrop-blur-md">
+      <div className="relative z-10 p-3 sm:p-4 flex items-center justify-between border-b border-amber-500/20 bg-slate-950/80 backdrop-blur-md">
         <div className="flex items-center gap-2.5">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 p-0.5 shadow-lg shadow-amber-500/40">
             <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-xl">
@@ -99,101 +103,65 @@ export const GameCard: React.FC<GameCardProps> = ({
         </div>
       </div>
 
-      {/* Middle Center: Clear and unobstructed view of the artwork */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-between p-4">
-        {/* Navigation Arrows for fast flip on center card */}
-        {isCenter && (
-          <>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onPrev();
-              }}
-              aria-label="اتاق قبلی"
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/40 text-amber-300 flex items-center justify-center transition-all active:scale-90 z-20 shadow-xl cursor-pointer"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onNext();
-              }}
-              aria-label="اتاق بعدی"
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-amber-500 hover:text-slate-950 border border-amber-500/40 text-amber-300 flex items-center justify-center transition-all active:scale-90 z-20 shadow-xl cursor-pointer"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-          </>
-        )}
+      {/* Center: Mythological Quote & Lore */}
+      <div className="relative z-10 p-4 sm:p-5 flex flex-col gap-2.5">
+        <div className="bg-slate-950/85 border border-amber-500/30 rounded-2xl p-3 shadow-inner">
+          <p className="text-xs sm:text-sm text-amber-200/95 italic font-serif leading-relaxed text-center">
+            «{game.heroQuote}»
+          </p>
+        </div>
 
-        <div className="w-full" />
-
-        {/* Clean, Sleek Title Tag (No long poems or heavy text blocking the art) */}
-        <div className="px-4 py-2 rounded-2xl bg-slate-950/80 backdrop-blur-md border border-amber-500/40 text-center shadow-xl">
-          <h2 className="text-base sm:text-lg font-black text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-            {game.title}
-          </h2>
-          <span className="text-[11px] font-bold text-slate-300">{game.category}</span>
+        <div className="flex items-center justify-between text-xs text-slate-300 px-1 font-sans">
+          <span className="flex items-center gap-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
+            <span>{game.playersCount} آنلاین</span>
+          </span>
+          <span className="text-amber-400 font-bold">حداقل ورودی: {game.minCoins} سکه</span>
         </div>
       </div>
 
-      {/* Bottom Action Footer: 3 Battle Modes */}
-      <div className="relative z-10 p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md border-t border-amber-500/20 flex flex-col gap-2">
-        <div className="text-[10px] font-bold text-slate-300 flex items-center justify-between">
-          <span>انتخاب حالت بازی:</span>
-          <span className="text-amber-400 font-mono">
-            {currentIndex + 1} از {totalGames}
-          </span>
-        </div>
+      {/* Bottom Action Footer */}
+      <div className="relative z-10 p-3 sm:p-4 bg-slate-950/90 border-t border-amber-500/20 backdrop-blur-md flex flex-col gap-2">
+        {isCenter ? (
+          <div className="grid grid-cols-3 gap-2">
+            {/* Play vs AI */}
+            <button
+              id={`play-ai-${game.id}`}
+              onClick={() => onSelectGame(game.id, 'ai')}
+              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 bg-gradient-to-b from-slate-800 to-slate-900 hover:from-amber-600 hover:to-amber-700 text-white rounded-2xl border border-slate-700 hover:border-amber-400 text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              <Bot className="w-4 h-4 text-amber-400" />
+              <span>نبرد با هوش</span>
+            </button>
 
-        {/* 3 Modes Buttons */}
-        <div className="grid grid-cols-3 gap-2">
-          <button
-            id={`gamecard-btn-ai-${game.id}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelectGame(game.id, 'ai');
-            }}
-            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-slate-900/90 hover:bg-cyan-500/20 border border-cyan-500/40 hover:border-cyan-400 active:scale-95 transition-all text-center cursor-pointer shadow-md group"
-          >
-            <div className="w-5 h-5 rounded-lg bg-cyan-500/20 flex items-center justify-center text-cyan-300 mb-1 group-hover:scale-110 transition-transform">
-              <Bot className="w-3.5 h-3.5" />
-            </div>
-            <span className="text-[10px] font-black text-cyan-300">هوش مصنوعی</span>
-            <span className="text-[8px] text-slate-400">تک‌نفره</span>
-          </button>
+            {/* Play vs 2P / Online */}
+            <button
+              id={`play-2p-${game.id}`}
+              onClick={() => onSelectGame(game.id, '2p')}
+              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 bg-gradient-to-b from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 rounded-2xl font-black text-xs transition-all shadow-lg shadow-amber-500/30 active:scale-95 cursor-pointer"
+            >
+              <Users className="w-4 h-4 text-slate-950" />
+              <span>دونفره / آنلاین</span>
+            </button>
 
+            {/* League Tournament */}
+            <button
+              id={`play-league-${game.id}`}
+              onClick={() => onSelectGame(game.id, 'league')}
+              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 bg-gradient-to-b from-purple-900/80 to-slate-900 hover:from-purple-800 hover:to-slate-800 text-purple-200 rounded-2xl border border-purple-500/40 text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+            >
+              <Trophy className="w-4 h-4 text-amber-400" />
+              <span>لیگ جایزه‌دار</span>
+            </button>
+          </div>
+        ) : (
           <button
-            id={`gamecard-btn-pvp-${game.id}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelectGame(game.id, 'pvp');
-            }}
-            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-slate-900/90 hover:bg-emerald-500/20 border border-emerald-500/40 hover:border-emerald-400 active:scale-95 transition-all text-center cursor-pointer shadow-md group"
+            onClick={onSelectCard}
+            className="w-full py-2.5 bg-amber-500/20 border border-amber-400/40 hover:bg-amber-500/30 text-amber-300 font-bold text-xs rounded-2xl text-center transition-colors cursor-pointer"
           >
-            <div className="w-5 h-5 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-300 mb-1 group-hover:scale-110 transition-transform">
-              <Users className="w-3.5 h-3.5" />
-            </div>
-            <span className="text-[10px] font-black text-emerald-300">دو نفره آنلاین</span>
-            <span className="text-[8px] text-slate-400">پهلوانان</span>
+            ورود به تالار {game.title}
           </button>
-
-          <button
-            id={`gamecard-btn-league-${game.id}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelectGame(game.id, 'league');
-            }}
-            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-gradient-to-br from-amber-500/30 to-yellow-600/30 hover:from-amber-500/40 hover:to-yellow-500/40 border border-amber-400 active:scale-95 transition-all text-center cursor-pointer shadow-md ring-1 ring-amber-400/50 group"
-          >
-            <div className="w-5 h-5 rounded-lg bg-amber-500/30 flex items-center justify-center text-amber-300 mb-1 group-hover:scale-110 transition-transform">
-              <Trophy className="w-3.5 h-3.5" />
-            </div>
-            <span className="text-[10px] font-black text-amber-300">لیگ قهرمانان</span>
-            <span className="text-[8px] text-amber-400/90">{game.leaguePrize} 🪙 جایزه</span>
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );
