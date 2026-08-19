@@ -130,6 +130,10 @@ class SoundEngine {
     }
   }
 
+  public playDice() {
+    this.playDiceRoll();
+  }
+
   public playWin() {
     if (this.isMuted) return;
     this.initCtx();

@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { GameId, GameInfo, GameMode } from '../../types';
-import { Bot, Users, Trophy, Star } from 'lucide-react';
+import { Bot, Users, Crown } from 'lucide-react';
+import { AntiqueRoomScene } from './AntiqueRoomScene';
 
 interface GameCardProps {
   game: GameInfo;
@@ -21,140 +22,108 @@ export const GameCard: React.FC<GameCardProps> = memo(({
   const isVisible = Math.abs(offset) <= 1;
 
   if (!isVisible) {
-    return null; // Do not render off-screen cards to save 100% GPU fillrate on budget phones!
+    return null; // Save 100% GPU memory on mobile
   }
 
-  // 60FPS Hardware-Accelerated 3D Transform
-  let transformClass = '';
-  let zIndex = 10;
-  let opacityClass = 'opacity-100';
-
-  if (isCenter) {
-    transformClass = 'translate-x-0 scale-100 z-30 shadow-2xl ring-2 ring-amber-400/80';
-    zIndex = 30;
-    opacityClass = 'opacity-100';
-  } else if (isRight) {
-    // Right card in RTL
-    transformClass = 'translate-x-[55%] scale-[0.84] z-10 opacity-60 hover:opacity-80 cursor-pointer';
-    zIndex = 10;
-    opacityClass = 'opacity-60';
-  } else if (isLeft) {
-    // Left card in RTL
-    transformClass = '-translate-x-[55%] scale-[0.84] z-10 opacity-60 hover:opacity-80 cursor-pointer';
-    zIndex = 10;
-    opacityClass = 'opacity-60';
-  }
+  const zIndex = isCenter ? 30 : 10;
+  const opacityClass = isCenter ? 'opacity-100' : 'opacity-65 hover:opacity-85 cursor-pointer';
 
   return (
     <div
       onClick={!isCenter ? onSelectCard : undefined}
       style={{
         zIndex,
-        transition: 'transform 0.28s cubic-bezier(0.2, 0.9, 0.4, 1), opacity 0.25s ease',
+        width: '303px',
+        height: '478px',
+        backgroundColor: '#111010',
+        borderRadius: '15px',
+        borderWidth: '0px',
+        fontSize: '4px',
+        transition: 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, box-shadow 0.35s ease',
         transform: isCenter
-          ? 'translate3d(0, 0, 0) scale(1)'
+          ? 'translate3d(0, 0, 30px) rotateY(0deg) scale(1)'
           : isRight
-          ? 'translate3d(55%, 0, -40px) scale(0.85)'
-          : 'translate3d(-55%, 0, -40px) scale(0.85)',
+          ? 'translate3d(60%, 0, -70px) rotateY(-20deg) scale(0.82)'
+          : 'translate3d(-60%, 0, -70px) rotateY(20deg) scale(0.82)',
+        boxShadow: isCenter
+          ? '0 25px 60px -15px rgba(0,0,0,0.95), 0 0 35px rgba(245,158,11,0.3), inset 0 0 20px rgba(0,0,0,0.8)'
+          : '0 15px 35px -10px rgba(0,0,0,0.85)',
       }}
-      className={`absolute inset-0 w-full max-w-[340px] sm:max-w-[380px] h-[460px] sm:h-[490px] mx-auto rounded-3xl overflow-hidden select-none flex flex-col justify-between gpu-layer border-2 ${
-        isCenter ? 'border-amber-400 bg-slate-950 shadow-2xl' : 'border-slate-800 bg-slate-900'
-      } ${opacityClass}`}
+      className={`absolute inset-0 mx-auto overflow-hidden select-none flex flex-col justify-between gpu-layer ${opacityClass}`}
     >
-      {/* 3D HD Artwork Layer without Any Text Clutter */}
-      <div className="absolute inset-0 bg-[#0a0705] overflow-hidden">
-        {game.heroImage && (
-          <img
-            src={game.heroImage}
-            alt={game.title}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-            className="w-full h-full object-cover object-center filter brightness-[0.88] contrast-[1.05]"
-            referrerPolicy="no-referrer"
-            loading="lazy"
-            decoding="async"
-          />
-        )}
-        {/* Lightweight Solid Gradient Overlay (No heavy GPU blur filters) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-black/60 pointer-events-none" />
-      </div>
+      {/* 1. EXACT REALISTIC ANTIQUE ROOM SCENE (Mahogany, Moonlit Window, Clock, Bookshelf, Table & Chairs, Board Game) */}
+      <AntiqueRoomScene gameId={game.id} title={game.title} />
 
-      {/* Top Header: Lightweight Glass Badge & Rating */}
-      <div className="relative z-10 p-3 sm:p-4 flex items-center justify-between pointer-events-none">
-        <div className="flex items-center gap-2">
-          <span className="text-xl sm:text-2xl drop-shadow">
-            {game.icon}
-          </span>
-          <span className="text-xs font-black text-amber-300 px-3 py-1 rounded-full bg-slate-950/90 border border-amber-500/40 shadow-sm">
-            {game.badge}
-          </span>
-        </div>
+      {/* 2. Top Antique Carved Wooden Room Plaque (e.g. اتاق شطرنج, اتاق اتللو, اتاق سودوکو) */}
+      <div className="relative z-20 pt-6 px-4 flex flex-col items-center">
+        <div className="relative px-6 py-1.5 rounded-2xl bg-gradient-to-b from-[#3a2815] via-[#241709] to-[#170e05] border-2 border-[#c29b38] shadow-[0_6px_20px_rgba(0,0,0,0.8),inset_0_1px_3px_rgba(255,235,165,0.4)] flex items-center justify-center gap-2">
+          {/* Left Decorative Scroll Wing */}
+          <span className="text-[#d4af37] text-xs opacity-70">❧</span>
+          
+          <h2 className="text-base sm:text-lg font-black text-[#f7e2a9] tracking-wide filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+            {game.roomTitle || game.title}
+          </h2>
 
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/90 border border-amber-500/30 text-amber-300 font-bold text-xs shadow-sm">
-          <Star className="w-3.5 h-3.5 fill-current text-amber-400" />
-          <span className="font-mono text-xs">{game.rating}</span>
+          {/* Right Decorative Scroll Wing */}
+          <span className="text-[#d4af37] text-xs opacity-70">☙</span>
         </div>
       </div>
 
-      {/* Bottom Action Footer with Clean Opaque Surface (Fast 60fps on mobile) */}
-      <div className="relative z-10 p-3 sm:p-4 bg-slate-950/95 border-t border-amber-500/30 flex flex-col gap-2.5 shadow-xl">
-        
-        {/* Game Title & Player Online Stat */}
-        <div className="flex items-center justify-between px-1">
-          <div>
-            <h3 className="text-base sm:text-lg font-black text-white">
-              {game.title}
-            </h3>
-            <span className="text-[11px] font-medium text-amber-300/80 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>{game.playersCount} آنلاین</span>
-            </span>
-          </div>
-          <span className="text-[11px] font-bold text-slate-300 bg-slate-900 px-2 py-0.5 rounded-lg border border-slate-800">
-            ورودی: {game.minCoins} سکه
-          </span>
-        </div>
+      {/* Central area is completely clear and visible */}
+      <div className="flex-1" />
 
-        {/* Action Buttons for Center Card */}
+      {/* 3. Bottom 3 Luxury Action Buttons (Exact Replica of Reference Image) */}
+      <div className="relative z-20 p-3.5 bg-gradient-to-t from-[#0a0704] via-[#120d08]/95 to-transparent flex flex-col gap-2">
         {isCenter ? (
-          <div className="grid grid-cols-3 gap-2 pt-1">
-            {/* Play vs AI */}
+          <div className="grid grid-cols-3 gap-2">
+            {/* Button 1: بازی با ربات */}
             <button
               id={`play-ai-${game.id}`}
               onClick={() => onSelectGame(game.id, 'ai')}
-              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl border border-slate-700 hover:border-amber-400 text-xs font-bold transition-transform active:scale-95 cursor-pointer"
+              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-2xl bg-gradient-to-b from-[#2e261a] to-[#17120a] border border-[#a37c2c]/80 hover:border-[#f59e0b] text-[#f7e2a9] transition-all active:scale-95 shadow-[0_4px_12px_rgba(0,0,0,0.7)] cursor-pointer group"
             >
-              <Bot className="w-4 h-4 text-amber-400" />
-              <span className="text-[11px]">نبرد با هوش</span>
+              <div className="w-8 h-8 rounded-full bg-[#1c160e] border border-[#a37c2c] flex items-center justify-center group-hover:scale-105 transition-transform shadow-inner">
+                <Bot className="w-4 h-4 text-[#eab308]" />
+              </div>
+              <span className="text-[11px] font-bold text-[#e5d0a1] leading-none">
+                بازی با ربات
+              </span>
             </button>
 
-            {/* Play vs 2P / Online */}
+            {/* Button 2: دونفره آنلاین */}
             <button
               id={`play-2p-${game.id}`}
               onClick={() => onSelectGame(game.id, '2p')}
-              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-2xl font-black text-xs transition-transform shadow-md shadow-amber-500/30 active:scale-95 cursor-pointer"
+              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-2xl bg-gradient-to-b from-[#1b3322] to-[#0c1f13] border-2 border-[#4ade80]/60 hover:border-[#4ade80] text-emerald-100 transition-all active:scale-95 shadow-[0_4px_15px_rgba(22,101,52,0.4)] cursor-pointer group"
             >
-              <Users className="w-4 h-4 text-slate-950" />
-              <span className="text-[11px]">دونفره / آنلاین</span>
+              <div className="w-8 h-8 rounded-full bg-[#0a170e] border border-[#4ade80]/70 flex items-center justify-center group-hover:scale-105 transition-transform shadow-inner">
+                <Users className="w-4 h-4 text-[#4ade80]" />
+              </div>
+              <span className="text-[11px] font-black text-emerald-200 leading-none">
+                دونفره آنلاین
+              </span>
             </button>
 
-            {/* League Tournament */}
+            {/* Button 3: دونفره پلاس / لیگ */}
             <button
               id={`play-league-${game.id}`}
               onClick={() => onSelectGame(game.id, 'league')}
-              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 bg-purple-950 hover:bg-purple-900 text-purple-200 rounded-2xl border border-purple-500/40 text-xs font-bold transition-transform active:scale-95 cursor-pointer"
+              className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-2xl bg-gradient-to-b from-[#3d2211] to-[#1f1107] border border-[#f59e0b]/80 hover:border-[#fbbf24] text-amber-100 transition-all active:scale-95 shadow-[0_4px_12px_rgba(0,0,0,0.7)] cursor-pointer group"
             >
-              <Trophy className="w-4 h-4 text-amber-400" />
-              <span className="text-[11px]">لیگ جایزه‌دار</span>
+              <div className="w-8 h-8 rounded-full bg-[#1c0f05] border border-[#f59e0b] flex items-center justify-center group-hover:scale-105 transition-transform shadow-inner">
+                <Crown className="w-4 h-4 text-[#fbbf24]" />
+              </div>
+              <span className="text-[11px] font-black text-[#fbbf24] leading-none">
+                دونفره پلاس
+              </span>
             </button>
           </div>
         ) : (
           <button
             onClick={onSelectCard}
-            className="w-full py-2 bg-amber-500/20 border border-amber-400/40 text-amber-300 font-bold text-xs rounded-xl text-center transition-colors cursor-pointer"
+            className="w-full py-2.5 bg-[#2a1d0d]/90 hover:bg-[#3d2a13] border border-[#c29b38] text-[#f5d996] font-black text-xs rounded-2xl text-center shadow-lg transition-colors cursor-pointer"
           >
-            انتخاب این بازی
+            ورود به {game.roomTitle || game.title} ➔
           </button>
         )}
       </div>

@@ -3,14 +3,19 @@ import { GameId, GameMode, NavTab, UserProfile, ViewMode } from '../types';
 import { GAMES_LIST } from '../data/gamesList';
 import { MythologicalRoomCarousel } from './MythologicalRoomCarousel';
 import { SleekMobileNav } from './common/SleekMobileNav';
+import { sounds } from '../utils/audio';
 import {
   ChevronLeft,
-  Coins,
+  User,
+  Ticket,
+  Candy,
+  KeyRound,
+  Volume2,
+  VolumeX,
   LayoutGrid,
   Layers,
-  LogIn,
-  Download,
   Globe,
+  Download,
 } from 'lucide-react';
 
 interface AndroidAppViewProps {
@@ -37,115 +42,133 @@ export const AndroidAppView: React.FC<AndroidAppViewProps> = ({
   children,
 }) => {
   const [mobileViewStyle, setMobileViewStyle] = useState<'room' | 'grid'>('room');
+  const [isMuted, setIsMuted] = useState(sounds.getMuted());
   const isInsideGame = activeTab === 'game_view' && selectedGameId !== null;
 
+  const toggleSound = () => {
+    const muted = sounds.toggleMute();
+    setIsMuted(muted);
+    if (!muted) {
+      sounds.playClick();
+    }
+  };
+
   return (
-    <div className="w-full min-h-screen flex flex-col bg-slate-950 font-['Vazirmatn'] text-slate-100 relative overflow-x-hidden">
-      {/* Mobile Top App Bar */}
-      <header className="sticky top-0 bg-[#070a12] border-b border-amber-500/30 px-3 sm:px-4 py-2 flex items-center justify-between z-30 shadow-md">
+    <div className="w-full min-h-screen flex flex-col bg-[#0a0705] font-['Vazirmatn'] text-slate-100 relative overflow-x-hidden">
+      {/* Mobile Top App Bar (Antique Bronze Style matching User Reference Image) */}
+      <header className="sticky top-0 bg-[#120d08]/95 border-b border-[#a37c2c]/60 px-3 sm:px-4 py-2 flex items-center justify-between z-30 shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
         {isInsideGame ? (
           <button
             id="android-back-to-home-btn"
             onClick={() => onSelectTab('home')}
-            className="flex items-center gap-1 text-xs font-bold text-amber-400 hover:text-amber-300 active:scale-95 transition-all cursor-pointer"
+            className="flex items-center gap-1 text-xs font-bold text-[#f5d996] hover:text-[#fbbf24] active:scale-95 transition-all cursor-pointer bg-[#24170a] px-3 py-1.5 rounded-xl border border-[#c29b38]"
           >
             <ChevronLeft className="w-4 h-4" />
-            <span>بازگشت به تالار</span>
+            <span>بازگشت به تالار بازی‌ها</span>
           </button>
         ) : (
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 flex items-center justify-center text-xs shadow-md shadow-amber-500/20">
-              👑
-            </div>
-            <div>
-              <span className="text-xs sm:text-sm font-black bg-gradient-to-l from-amber-300 to-amber-500 bg-clip-text text-transparent">
-                گیمستان
+          /* Top 5 Antique Badges from Reference Image */
+          <div className="w-full flex items-center justify-between gap-1 sm:gap-2">
+            {/* 1. پروفایل */}
+            <button
+              onClick={onOpenAuth}
+              className="flex flex-col items-center gap-0.5 group cursor-pointer"
+            >
+              <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#2e2213] to-[#140d06] border border-[#c29b38] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <User className="w-4 h-4 text-[#e5d0a1]" />
+              </div>
+              <span className="text-[9px] font-bold text-[#bfa472] leading-none">پروفایل</span>
+            </button>
+
+            {/* 2. بلیت */}
+            <button
+              onClick={() => onSelectTab('leagues')}
+              className="flex flex-col items-center gap-0.5 group cursor-pointer"
+            >
+              <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#2e2213] to-[#140d06] border border-[#c29b38] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <Ticket className="w-4 h-4 text-[#e5d0a1]" />
+              </div>
+              <span className="text-[9px] font-bold text-[#bfa472] leading-none">بلیت</span>
+            </button>
+
+            {/* 3. آب‌نبات / سکه */}
+            <button
+              onClick={() => onSelectTab('wallet')}
+              className="flex flex-col items-center gap-0.5 group cursor-pointer"
+            >
+              <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#3d2211] to-[#170e05] border border-[#f59e0b] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <Candy className="w-4 h-4 text-[#fbbf24]" />
+              </div>
+              <span className="text-[9px] font-black text-[#f5d996] leading-none">
+                {profile.coins.toLocaleString('fa-IR')}
               </span>
-              <span className="text-[9px] text-amber-400/80 mr-1.5 font-bold">PRO</span>
+            </button>
+
+            {/* 4. جاسوییچی / نشان */}
+            <button
+              onClick={() => onSelectTab('wheel')}
+              className="flex flex-col items-center gap-0.5 group cursor-pointer"
+            >
+              <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#2e2213] to-[#140d06] border border-[#c29b38] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <KeyRound className="w-4 h-4 text-[#e5d0a1]" />
+              </div>
+              <span className="text-[9px] font-bold text-[#bfa472] leading-none">جاسوییچی</span>
+            </button>
+
+            {/* 5. بلندگو */}
+            <button
+              onClick={toggleSound}
+              className="flex flex-col items-center gap-0.5 group cursor-pointer"
+            >
+              <div className="w-8 h-8 rounded-full bg-gradient-to-b from-[#2e2213] to-[#140d06] border border-[#c29b38] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                {isMuted ? (
+                  <VolumeX className="w-4 h-4 text-rose-400" />
+                ) : (
+                  <Volume2 className="w-4 h-4 text-[#e5d0a1]" />
+                )}
+              </div>
+              <span className="text-[9px] font-bold text-[#bfa472] leading-none">بلندگو</span>
+            </button>
+
+            {/* Optional Small Mode Toggles */}
+            <div className="flex items-center gap-1 border-r border-[#785928]/50 pr-1.5 mr-0.5">
+              {onToggleViewMode && (
+                <button
+                  onClick={() => onToggleViewMode('web')}
+                  title="نمای وب‌سایت"
+                  className="p-1 rounded-lg bg-[#24170a] border border-[#785928] text-[#e5d0a1] hover:text-[#fbbf24] cursor-pointer"
+                >
+                  <Globe className="w-3.5 h-3.5" />
+                </button>
+              )}
+              {onOpenPwaInstall && (
+                <button
+                  onClick={onOpenPwaInstall}
+                  title="نصب اپلیکیشن"
+                  className="p-1 rounded-lg bg-[#1b3322] border border-[#4ade80]/60 text-emerald-300 cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                </button>
+              )}
+              {activeTab === 'home' && (
+                <button
+                  onClick={() => setMobileViewStyle((s) => (s === 'room' ? 'grid' : 'room'))}
+                  title={mobileViewStyle === 'room' ? 'نمای شبکه‌ای' : 'نمای ورق‌زدن ۳بعدی'}
+                  className="p-1 rounded-lg bg-[#24170a] border border-[#785928] text-[#f59e0b] cursor-pointer"
+                >
+                  {mobileViewStyle === 'room' ? (
+                    <LayoutGrid className="w-3.5 h-3.5" />
+                  ) : (
+                    <Layers className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              )}
             </div>
           </div>
         )}
-
-        {/* Top actions: View Toggle, PWA Install, Wallet & User / Auth */}
-        <div className="flex items-center gap-1.5">
-          {/* Switch to Web Mode */}
-          {onToggleViewMode && (
-            <button
-              onClick={() => onToggleViewMode('web')}
-              title="تغییر به نمای وب‌سایت دسکتاپ"
-              className="p-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-300 text-xs flex items-center gap-1 cursor-pointer transition-colors"
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span className="text-[10px] hidden sm:inline">وب‌سایت</span>
-            </button>
-          )}
-
-          {/* PWA Install Button on mobile */}
-          {onOpenPwaInstall && (
-            <button
-              onClick={onOpenPwaInstall}
-              title="نصب اپلیکیشن روی گوشی"
-              className="p-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 text-xs flex items-center gap-1 cursor-pointer"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span className="text-[10px] hidden sm:inline">نصب</span>
-            </button>
-          )}
-
-          {!isInsideGame && activeTab === 'home' && (
-            <button
-              onClick={() => setMobileViewStyle((s) => (s === 'room' ? 'grid' : 'room'))}
-              title={mobileViewStyle === 'room' ? 'نمای شبکه‌ای' : 'نمای ورق‌زدن ۳بعدی'}
-              className="p-1.5 rounded-xl bg-slate-900 border border-slate-800 text-amber-400 hover:bg-slate-800 text-xs flex items-center gap-1 cursor-pointer"
-            >
-              {mobileViewStyle === 'room' ? (
-                <LayoutGrid className="w-3.5 h-3.5" />
-              ) : (
-                <Layers className="w-3.5 h-3.5" />
-              )}
-            </button>
-          )}
-
-          {/* Wallet */}
-          <div
-            onClick={() => onSelectTab('wallet')}
-            className="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-xl border border-amber-500/30 cursor-pointer shadow-sm"
-          >
-            <Coins className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-xs font-black text-amber-300 font-mono">
-              {profile.coins.toLocaleString('fa-IR')}
-            </span>
-          </div>
-
-          {/* User Auth Button */}
-          {profile.isLoggedIn ? (
-            <button
-              onClick={onOpenAuth}
-              className="flex items-center gap-1 p-0.5 rounded-xl bg-slate-900 border border-amber-500/30 hover:border-amber-400 transition-colors cursor-pointer"
-            >
-              {profile.customAvatarUrl ? (
-                <img
-                  src={profile.customAvatarUrl}
-                  alt={profile.displayName}
-                  className="w-6 h-6 rounded-lg object-cover"
-                />
-              ) : (
-                <span className="text-base">{profile.avatar}</span>
-              )}
-            </button>
-          ) : (
-            <button
-              onClick={onOpenAuth}
-              className="flex items-center gap-1 px-2 py-1 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-md shadow-amber-500/20 active:scale-95 transition-all cursor-pointer"
-            >
-              <LogIn className="w-3 h-3" />
-              <span>ورود</span>
-            </button>
-          )}
-        </div>
       </header>
 
-      {/* Main Screen Content with ZERO wasted space */}
+      {/* Main Screen Content */}
       <main className="flex-1 w-full flex flex-col pb-24 relative z-10 no-scrollbar overflow-x-hidden">
         {activeTab === 'home' && !isInsideGame ? (
           mobileViewStyle === 'room' ? (
@@ -157,9 +180,9 @@ export const AndroidAppView: React.FC<AndroidAppViewProps> = ({
                 <div
                   key={game.id}
                   onClick={() => onSelectGame(game.id, 'ai')}
-                  className="bg-slate-900/90 border border-slate-800 hover:border-amber-400/60 rounded-2xl overflow-hidden p-2.5 flex flex-col gap-2 cursor-pointer shadow-lg hover:scale-102 transition-all group"
+                  className="bg-[#170f07] border border-[#a37c2c]/60 hover:border-[#f59e0b] rounded-2xl overflow-hidden p-2.5 flex flex-col gap-2 cursor-pointer shadow-lg hover:scale-102 transition-all group"
                 >
-                  <div className="relative aspect-video rounded-xl overflow-hidden bg-slate-950">
+                  <div className="relative aspect-video rounded-xl overflow-hidden bg-black">
                     {game.heroImage && (
                       <img
                         src={game.heroImage}
@@ -168,13 +191,13 @@ export const AndroidAppView: React.FC<AndroidAppViewProps> = ({
                         referrerPolicy="no-referrer"
                       />
                     )}
-                    <span className="absolute bottom-1 right-1 text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500 text-slate-950">
+                    <span className="absolute bottom-1 right-1 text-[9px] font-bold px-1.5 py-0.5 rounded bg-gradient-to-r from-[#d4af37] to-[#f59e0b] text-slate-950">
                       {game.badge}
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-xs font-black text-amber-300">{game.title}</h3>
-                    <p className="text-[10px] text-slate-400">{game.heroName}</p>
+                    <h3 className="text-xs font-black text-[#f5d996]">{game.roomTitle || game.title}</h3>
+                    <p className="text-[10px] text-[#bfa472]">{game.heroName}</p>
                   </div>
                 </div>
               ))}
