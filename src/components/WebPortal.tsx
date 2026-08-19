@@ -13,6 +13,10 @@ import {
   Layers,
   LayoutGrid,
   Coins,
+  Sparkles,
+  Search,
+  Swords,
+  Award,
 } from 'lucide-react';
 
 interface WebPortalProps {
@@ -26,7 +30,7 @@ export const WebPortal: React.FC<WebPortalProps> = ({
   onOpenWheel,
   onOpenLeagues,
 }) => {
-  const [viewStyle, setViewStyle] = useState<'rooms' | 'grid'>('rooms');
+  const [viewStyle, setViewStyle] = useState<'grid' | 'rooms'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('همه');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -40,7 +44,8 @@ export const WebPortal: React.FC<WebPortalProps> = ({
   ];
 
   const filteredGames = GAMES_LIST.filter((game) => {
-    const matchesCategory = selectedCategory === 'همه' || game.category === selectedCategory;
+    const matchesCategory =
+      selectedCategory === 'همه' || game.category === selectedCategory;
     const matchesSearch =
       game.title.includes(searchQuery) ||
       game.titleEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -50,221 +55,235 @@ export const WebPortal: React.FC<WebPortalProps> = ({
   });
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-8 text-slate-100 font-['Vazirmatn']">
-      {/* Persian Mythological Hero Banner */}
-      <div className="relative rounded-3xl bg-gradient-to-r from-[#170a04] via-slate-900 to-[#0a1826] border-2 border-amber-500/40 p-6 sm:p-8 overflow-hidden shadow-2xl">
-        <div className="absolute -right-10 -bottom-10 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -left-10 -top-10 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 flex flex-col gap-6 text-slate-100 font-['Vazirmatn'] select-none">
+      {/* 1. Royal Spotlight Hero Showcase */}
+      <div className="relative rounded-3xl bg-gradient-to-r from-[#140b05] via-[#090d18] to-[#04121d] border-2 border-amber-500/40 p-5 sm:p-8 overflow-hidden shadow-2xl">
+        {/* Subtle Ambient Radial Lighting */}
+        <div className="absolute -right-12 -bottom-12 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -left-12 -top-12 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="max-w-2xl flex flex-col gap-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold w-fit">
-              <Crown className="w-3.5 h-3.5" />
-              <span>کاخ بازی‌های اساطیری ایران و شاهنامه فردوسی</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold w-fit">
+              <Crown className="w-4 h-4 text-amber-400" />
+              <span>پلتفرم تخصصی بازی‌های فکری و اساطیری ایران</span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-black leading-tight text-white">
-              میدان نبرد <span className="text-amber-400">پهلوانان شاهنامه</span>
+              کاخ بازی‌های کهن و <span className="text-amber-400">پهلوانان شاهنامه</span>
             </h1>
 
-            <p className="text-sm text-slate-300 leading-relaxed">
-              شطرنج اساطیری رستم، اتللو تاکتیکی زال و سیمرغ، دوز و گوموکو کاوه آهنگر، منچ هفت‌خان سهراب، سودوکوی کوروش و کوییز حکمت فردوسی با جوایز سکه طلا.
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+              میدان هوش، استراتژی و منطق با ۱۰ تالار بازی اساطیری: شطرنج رستم، اتللو سیمرغ، سودوکو، منچ هفت‌خان، دوز کاوه، کوییز فردوسی و گردونه جوایز طلایی.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2.5 pt-1">
               <button
                 id="hero-play-chess-btn"
                 onClick={() => onSelectGame('chess', 'ai')}
-                className="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/20 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-5 py-2.5 sm:py-3 rounded-2xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm shadow-xl shadow-amber-500/25 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
               >
                 <Play className="w-4 h-4 fill-current" />
-                <span>شروع نبرد شطرنج رستم</span>
+                <span>نبرد شطرنج رستم</span>
               </button>
 
               <button
                 id="hero-wheel-btn"
                 onClick={onOpenWheel}
-                className="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-amber-500/30 text-amber-300 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2.5 sm:py-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-amber-500/40 text-amber-300 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
               >
-                <span>گردونه شانس اساطیری 🎡</span>
+                <span>گردونه شانس 🎡</span>
               </button>
 
               <button
                 id="hero-leagues-btn"
                 onClick={onOpenLeagues}
-                className="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-300 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2.5 sm:py-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-cyan-300 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
               >
-                <Trophy className="w-4 h-4" />
-                <span>جدول لیگ پهلوانان</span>
+                <Trophy className="w-4 h-4 text-amber-400" />
+                <span>لیگ پهلوانان</span>
               </button>
             </div>
           </div>
 
-          {/* Featured Right Hero Card */}
-          <div className="w-full lg:w-80 bg-slate-950/85 border border-amber-500/40 p-4.5 rounded-2xl flex flex-col gap-3 shadow-2xl backdrop-blur-md">
-            <div className="flex items-center justify-between text-xs font-bold border-b border-amber-500/20 pb-2">
+          {/* Quick Match Featured Pod */}
+          <div className="w-full lg:w-80 bg-slate-950/90 border border-amber-500/40 p-4 rounded-2xl flex flex-col gap-3 shadow-xl backdrop-blur-md">
+            <div className="flex items-center justify-between text-xs font-bold border-b border-slate-800 pb-2">
               <span className="text-amber-400 flex items-center gap-1.5 font-black">
                 <Flame className="w-4 h-4 text-rose-500" />
-                <span>اتاق برگزیده شاهنامه</span>
+                <span>تالار داغ امروز</span>
               </span>
-              <span className="text-[10px] text-amber-300 font-mono">🏆 لیگ فعال</span>
+              <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">
+                جایزه ۲۵۰ سکه
+              </span>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="text-4xl p-2 rounded-xl bg-amber-500/20 border border-amber-500/30">
-                🦁
+              <div className="text-3xl p-2 rounded-xl bg-gradient-to-br from-amber-500/30 to-amber-700/20 border border-amber-500/40">
+                ♟️
               </div>
               <div>
-                <div className="text-sm font-black text-amber-300">رستم دستان</div>
-                <div className="text-xs text-slate-300">شطرنج بین‌المللی با سیمرغ دانا</div>
+                <div className="text-sm font-black text-amber-300">شطرنج اساطیری رستم</div>
+                <div className="text-xs text-slate-400">۱۸,۴۵۰ بازیکن آنلاین</div>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-1.5 pt-1 text-center">
+            <div className="grid grid-cols-3 gap-1.5 pt-1 text-center font-bold text-[11px]">
               <button
                 onClick={() => onSelectGame('chess', 'ai')}
-                className="py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-500/20 border border-cyan-500/40 text-[10px] font-bold text-cyan-300 cursor-pointer"
+                className="py-2 rounded-xl bg-slate-900 hover:bg-amber-500 hover:text-slate-950 border border-slate-800 hover:border-amber-400 text-slate-200 transition-all cursor-pointer"
               >
-                🤖 ربات
+                🤖 هوش
               </button>
               <button
-                onClick={() => onSelectGame('chess', 'pvp')}
-                className="py-1.5 rounded-lg bg-slate-800 hover:bg-emerald-500/20 border border-emerald-500/40 text-[10px] font-bold text-emerald-300 cursor-pointer"
+                onClick={() => onSelectGame('chess', '2p')}
+                className="py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 transition-all cursor-pointer"
               >
-                👥 آنلاین
+                👥 دونفره
               </button>
               <button
                 onClick={() => onSelectGame('chess', 'league')}
-                className="py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-[10px] font-bold text-amber-300 cursor-pointer"
+                className="py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 border border-purple-500/40 text-purple-200 transition-all cursor-pointer"
               >
-                🏆 لیگ
+                🏆 تورنمنت
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* View Switcher Toolbar (Room Flip vs Grid View) */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/90 border border-amber-500/20 p-3 rounded-2xl shadow-lg">
-        {/* Toggle Mode */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-slate-300">نمایش بازی‌ها:</span>
-          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+      {/* 2. Interactive Category Filter Bar & Live Search */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 p-3 rounded-2xl shadow-md">
+        {/* Category Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none">
+          {categories.map((cat) => (
             <button
-              id="view-style-rooms-btn"
-              onClick={() => setViewStyle('rooms')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                viewStyle === 'rooms'
-                  ? 'bg-amber-500 text-slate-950 shadow-md'
-                  : 'text-slate-400 hover:text-slate-200'
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                selectedCategory === cat
+                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                  : 'bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800'
               }`}
             >
-              <Layers className="w-3.5 h-3.5" />
-              <span>اتاق‌های سه‌بعدی اساطیری (ورق‌زن)</span>
+              {cat}
             </button>
+          ))}
+        </div>
 
+        {/* Search & View Switcher */}
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="relative flex-1 sm:w-56">
+            <Search className="w-3.5 h-3.5 absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="جستجوی تالار بازی..."
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl pr-9 pl-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400 placeholder:text-slate-500"
+            />
+          </div>
+
+          <div className="flex bg-slate-950 p-0.5 rounded-xl border border-slate-800 shrink-0">
             <button
-              id="view-style-grid-btn"
               onClick={() => setViewStyle('grid')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              title="نمایش شبکه‌ای مدرن (پیش‌فرض)"
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                 viewStyle === 'grid'
-                  ? 'bg-amber-500 text-slate-950 shadow-md'
+                  ? 'bg-amber-500 text-slate-950 shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>شبکه‌ای</span>
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewStyle('rooms')}
+              title="نمایش اسلایدر ۳بعدی"
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                viewStyle === 'rooms'
+                  ? 'bg-amber-500 text-slate-950 shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Layers className="w-4 h-4" />
             </button>
           </div>
         </div>
-
-        {/* Category Filters (when in grid) & Search */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="جستجوی پهلوان یا بازی..."
-            className="w-full sm:w-60 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-400 placeholder:text-slate-500"
-          />
-        </div>
       </div>
 
-      {/* Primary Display View */}
-      {viewStyle === 'rooms' ? (
-        /* The 3D Room-by-Room Flip Carousel */
-        <div className="w-full max-w-xl mx-auto">
-          <MythologicalRoomCarousel
-            onStartGame={(gameId, mode) => onSelectGame(gameId, mode)}
-          />
-        </div>
-      ) : (
-        /* Grid Display */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {/* 3. Ultra-Fast Responsive Bento Game Grid */}
+      {viewStyle === 'grid' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
           {filteredGames.map((game) => (
             <div
               key={game.id}
-              id={`game-card-${game.id}`}
-              className="group rounded-3xl bg-slate-900 border-2 border-amber-500/40 p-4.5 flex flex-col justify-between gap-3 shadow-xl hover:shadow-2xl hover:shadow-amber-500/10 transition-all relative overflow-hidden"
+              id={`game-pod-${game.id}`}
+              className="group rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 p-4 sm:p-5 flex flex-col justify-between gap-3 shadow-lg hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-200 hover:-translate-y-1 relative overflow-hidden"
             >
-              {game.heroImage && (
-                <div className="absolute inset-0 z-0">
-                  <img
-                    src={game.heroImage}
-                    alt={game.title}
-                    className="w-full h-full object-cover brightness-[0.4] group-hover:scale-105 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+              {/* Top Row: Icon + Badge + Rating */}
+              <div className="flex items-start justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/20 via-amber-600/15 to-transparent border border-amber-500/30 flex items-center justify-center text-2xl shadow-md">
+                  {game.icon}
                 </div>
-              )}
 
-              <div className="relative z-10">
-                {/* Top Row: Hero Avatar & Badge */}
-                <div className="flex items-center justify-between mb-2">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-950/80 border border-amber-500/40 flex items-center justify-center text-3xl shadow-inner">
-                    {game.heroAvatar}
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 font-sans shadow-sm">
+                    {game.badge}
+                  </span>
+                  <div className="flex items-center gap-1 text-xs text-amber-300 font-bold">
+                    <Star className="w-3 h-3 fill-current text-amber-400" />
+                    <span>{game.rating}</span>
                   </div>
-                  {game.badge && (
-                    <span className="text-[10px] font-black px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 shadow-sm">
-                      {game.badge}
-                    </span>
-                  )}
                 </div>
+              </div>
 
-                <div className="text-[10px] font-bold text-amber-400">{game.heroRole}</div>
-                <h3 className="text-base font-black text-white">{game.heroName}</h3>
-                <h4 className="text-xs font-bold text-amber-300 mb-1">{game.title}</h4>
-                <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">
+              {/* Middle Lore & Info */}
+              <div className="flex flex-col gap-1.5 my-1">
+                <div className="text-[11px] text-amber-400/90 font-black">{game.heroName} • {game.heroRole}</div>
+                <h3 className="text-base font-black text-white group-hover:text-amber-300 transition-colors">
+                  {game.title}
+                </h3>
+                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
                   {game.description}
                 </p>
               </div>
 
-              {/* Action Buttons for 3 Modes */}
-              <div className="relative z-10 flex flex-col gap-1.5 pt-2 border-t border-amber-500/20">
-                <div className="grid grid-cols-3 gap-1.5">
-                  <button
-                    onClick={() => onSelectGame(game.id, 'ai')}
-                    className="py-1.5 rounded-xl bg-slate-900/90 hover:bg-cyan-500/20 border border-cyan-500/40 text-[10px] font-bold text-cyan-300 text-center active:scale-95 transition-all cursor-pointer"
-                  >
-                    🤖 ربات
-                  </button>
-                  <button
-                    onClick={() => onSelectGame(game.id, 'pvp')}
-                    className="py-1.5 rounded-xl bg-slate-900/90 hover:bg-emerald-500/20 border border-emerald-500/40 text-[10px] font-bold text-emerald-300 text-center active:scale-95 transition-all cursor-pointer"
-                  >
-                    👥 آنلاین
-                  </button>
-                  <button
-                    onClick={() => onSelectGame(game.id, 'league')}
-                    className="py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black text-[10px] hover:bg-amber-400 text-center shadow-md active:scale-95 transition-all cursor-pointer"
-                  >
-                    🏆 لیگ
-                  </button>
-                </div>
+              {/* Online Player Meta */}
+              <div className="flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/80 pt-2.5">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
+                  <span className="text-[11px]">{game.playersCount} آنلاین</span>
+                </span>
+                <span className="text-amber-400/90 font-bold text-[11px]">ورودی: {game.minCoins} سکه</span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-2 pt-1 font-bold text-xs">
+                <button
+                  onClick={() => onSelectGame(game.id, 'ai')}
+                  className="py-2.5 px-2 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 text-slate-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                >
+                  <Bot className="w-3.5 h-3.5 text-amber-400" />
+                  <span>بازی با هوش</span>
+                </button>
+
+                <button
+                  onClick={() => onSelectGame(game.id, '2p')}
+                  className="py-2.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                >
+                  <Users className="w-3.5 h-3.5 text-slate-950" />
+                  <span>دونفره / آنلاین</span>
+                </button>
               </div>
             </div>
           ))}
+        </div>
+      ) : (
+        /* Optional 3D Room-by-Room Carousel */
+        <div className="w-full max-w-xl mx-auto py-2">
+          <MythologicalRoomCarousel
+            onStartGame={(gameId, mode) => onSelectGame(gameId, mode)}
+          />
         </div>
       )}
     </div>
