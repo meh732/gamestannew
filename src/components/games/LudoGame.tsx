@@ -289,7 +289,26 @@ export const LudoGame: React.FC<LudoGameProps> = ({
   const isHumanTurn = activeTurn === 'red' || gameMode !== 'ai';
 
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-2 text-slate-100 font-['Vazirmatn'] select-none p-1 sm:p-3">
+    <div className="w-full h-full min-h-screen flex flex-col items-center justify-start p-1 sm:p-3 relative overflow-x-hidden z-10">
+      
+      {/* 🏰 FULL-SCREEN LUXURY CASTLE BACKGROUND */}
+      <div className="fixed inset-0 w-full h-full -z-10 pointer-events-none select-none bg-[#0a0705]">
+        <img 
+          src="/castle-ludo.jpg?v=2" 
+          alt="Castle Background" 
+          className="w-full h-full object-cover opacity-80 filter brightness-[0.55] contrast-[1.18] saturate-[0.9]"
+          referrerPolicy="no-referrer"
+        />
+        {/* Dynamic Hearth Glow */}
+        <div className="absolute inset-0 transition-opacity duration-1000 mix-blend-color-dodge animate-pulse"
+          style={{
+            background: `radial-gradient(circle at 50% 40%, rgba(244, 63, 94, 0.15) 0%, rgba(0,0,0,0.95) 88%)`,
+            animationDuration: '5s'
+          }}
+        />
+      </div>
+
+      <div className="w-full max-w-4xl mx-auto flex flex-col items-center gap-2 text-slate-100 font-['Vazirmatn'] select-none relative">
       {/* Top Banner */}
       <GameModeBanner
         gameId="ludo"
@@ -618,6 +637,7 @@ export const LudoGame: React.FC<LudoGameProps> = ({
           })}
         </div>
       </div>
+    </div>
     </div>
   );
 };

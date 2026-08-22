@@ -155,7 +155,26 @@ export const SudokuGame: React.FC<SudokuGameProps> = ({ onBack, onWinReward }) =
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-3 sm:p-5 flex flex-col gap-4 text-slate-100 font-['Vazirmatn']">
+    <div className="w-full h-full min-h-screen flex flex-col items-center justify-start p-1 sm:p-3 relative overflow-x-hidden z-10">
+      
+      {/* 🏰 FULL-SCREEN LUXURY CASTLE BACKGROUND */}
+      <div className="fixed inset-0 w-full h-full -z-10 pointer-events-none select-none bg-[#0a0705]">
+        <img 
+          src="/castle-sudoku.jpg?v=2" 
+          alt="Castle Background" 
+          className="w-full h-full object-cover opacity-80 filter brightness-[0.55] contrast-[1.18] saturate-[0.9]"
+          referrerPolicy="no-referrer"
+        />
+        {/* Dynamic Hearth Glow */}
+        <div className="absolute inset-0 transition-opacity duration-1000 mix-blend-color-dodge animate-pulse"
+          style={{
+            background: `radial-gradient(circle at 50% 40%, rgba(14, 165, 233, 0.22) 0%, rgba(0,0,0,0.92) 88%)`,
+            animationDuration: '4s'
+          }}
+        />
+      </div>
+
+      <div className="w-full max-w-2xl mx-auto flex flex-col gap-4 text-slate-100 font-['Vazirmatn'] relative">
       {/* Header */}
       <div className="flex items-center justify-between bg-slate-900/90 border border-sky-500/30 rounded-2xl p-3 sm:p-4 backdrop-blur-md shadow-lg shadow-black/40">
         <div className="flex items-center gap-3">
@@ -332,6 +351,7 @@ export const SudokuGame: React.FC<SudokuGameProps> = ({ onBack, onWinReward }) =
           </button>
         ))}
       </div>
+    </div>
     </div>
   );
 };

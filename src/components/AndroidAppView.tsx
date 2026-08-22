@@ -54,7 +54,7 @@ export const AndroidAppView: React.FC<AndroidAppViewProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col bg-[#0a0705] font-['Vazirmatn'] text-slate-100 relative overflow-x-hidden">
+    <div className="w-full min-h-screen flex flex-col bg-transparent font-['Vazirmatn'] text-slate-100 relative overflow-x-hidden">
       {/* Mobile Top App Bar (Antique Bronze Style matching User Reference Image) */}
       <header className="sticky top-0 bg-[#120d08]/95 border-b border-[#a37c2c]/60 px-3 sm:px-4 py-2 flex items-center justify-between z-30 shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
         {isInsideGame ? (

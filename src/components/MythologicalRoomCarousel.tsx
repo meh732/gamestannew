@@ -60,7 +60,7 @@ export const MythologicalRoomCarousel: React.FC<MythologicalRoomCarouselProps> =
     >
       {/* High Performance 3D Card Stage with True Perspective */}
       <div
-        style={{ perspective: '1100px', transformStyle: 'preserve-3d' }}
+        style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
         className="relative w-full h-[480px] sm:h-[510px] flex items-center justify-center overflow-x-hidden my-1 z-20"
       >
         {GAMES_LIST.map((game, idx) => {

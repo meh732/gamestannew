@@ -39,14 +39,14 @@ export const GameCard: React.FC<GameCardProps> = memo(({
         borderRadius: '15px',
         borderWidth: '0px',
         fontSize: '4px',
-        transition: 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, box-shadow 0.35s ease',
+        transition: 'transform 0.48s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, box-shadow 0.4s ease',
         transform: isCenter
-          ? 'translate3d(0, 0, 30px) rotateY(0deg) scale(1)'
+          ? 'translate3d(0, 0, 80px) rotateY(0deg) scale(1)'
           : isRight
-          ? 'translate3d(60%, 0, -70px) rotateY(-20deg) scale(0.82)'
-          : 'translate3d(-60%, 0, -70px) rotateY(20deg) scale(0.82)',
+          ? 'translate3d(64%, 0, -120px) rotateY(-36deg) scale(0.78)'
+          : 'translate3d(-64%, 0, -120px) rotateY(36deg) scale(0.78)',
         boxShadow: isCenter
-          ? '0 25px 60px -15px rgba(0,0,0,0.95), 0 0 35px rgba(245,158,11,0.3), inset 0 0 20px rgba(0,0,0,0.8)'
+          ? '0 30px 70px -15px rgba(0,0,0,0.95), 0 0 45px rgba(245,158,11,0.4), inset 0 0 25px rgba(0,0,0,0.8)'
           : '0 15px 35px -10px rgba(0,0,0,0.85)',
       }}
       className={`absolute inset-0 mx-auto overflow-hidden select-none flex flex-col justify-between gpu-layer ${opacityClass}`}
